@@ -1,5 +1,8 @@
 <template>
-  <f7-page class="container-page">
+  <f7-page
+    name="login"
+    class="container-page"
+  >
     <div class="container-img">
       <div class="div-img">
         <img
@@ -32,6 +35,7 @@
           class="email"
           type="email"
           placeholder="Your e-mail"
+          @change="EmailChange($event.target.value)"
         >
       </div>
 
@@ -41,6 +45,7 @@
           class="passw"
           type="password"
           placeholder="Your password"
+          @change="PasswChange($event.target.value)"
         >
       </div>
       <div class="input__forgot">
@@ -85,6 +90,7 @@
         class="btn-comprobar"
         raised
         round
+        @click="VerificacionIdentidad"
       >
         {{ btnText }}
       </f7-button>
@@ -94,6 +100,10 @@
 
 <script>
 export default {
+  props: {
+    f7route: Object,
+    f7router: Object,
+  },
   data() {
     return {
       loginActivo: true,
@@ -101,6 +111,9 @@ export default {
       traspasos: true, // pestaña de traspasos
       reprocesados: false, // pestaña de reprocesados
       btnText: 'Login', // texto del btono segun si es login o signup
+      emaiValue: null,
+      passwValue: null,
+
     };
   },
   methods: {
@@ -113,6 +126,24 @@ export default {
       this.btnText = 'SingUp';
       this.loginActivo = false;
       this.signUpActivo = true;
+    },
+    EmailChange(val) {
+      this.emaiValue = val;
+    },
+    PasswChange(val) {
+      this.passwValue = val;
+    },
+    VerificacionIdentidad() {
+      console.log(this.passwValue);
+      console.log(this.emaiValue);
+      /*  if (this.btnText === 'Login') { */
+      /* if (this.emaiValue === 'Admin' && this.passwValue === 'Admin') { */
+      this.f7router.navigate('/frPrincipal/');
+      console.log('entras');
+      /*  }
+      } else {
+        // comprobacions para el sign up
+      } */
     },
   },
 

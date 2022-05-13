@@ -2,6 +2,7 @@ import HomePage from '../pages/home.vue';
 import AboutPage from '../pages/about.vue';
 import Login from '../pages/login.vue';
 import NotFoundPage from '../pages/404.vue';
+import FrPrincipal from '@/pages/FrPrincipal.vue';
 
 const routes = [
   {
@@ -15,6 +16,10 @@ const routes = [
   {
     path: '/login/',
     component: Login,
+  },
+  {
+    path: '/frPrincipal/',
+    component: FrPrincipal,
   },
   {
     path: '(.*)',
