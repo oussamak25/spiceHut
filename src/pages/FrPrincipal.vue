@@ -99,16 +99,30 @@
           </div>
         </div>
       </div>
+      <!-- lista de platos segun seleccion en el menu -->
+      <div class="container-platos">
+        <div class="item-plato">
+          <UCPlato />
+        </div>
+        <div class="item-plato">
+          <UCPlato />
+        </div>
+        <div class="item-plato">
+          <UCPlato />
+        </div>
+      </div>
     </div>
   </f7-page>
 </template>
 
 <script>
 import UCSearchEmpty from '@/components/UCSearchEmpty.vue';
+import UCPlato from '@/components/UCPlato.vue';
 
 export default {
   components: {
     UCSearchEmpty,
+    UCPlato,
   },
   data() {
     return {
@@ -183,6 +197,8 @@ export default {
 <style lang="scss" scoped>
 
 .container-page{
+    width: 100%;
+    height: 100%;
     background: #F2F2F2;
 }
 .sin-scroll{
@@ -204,20 +220,21 @@ export default {
     padding: 2vh;
     white-space: nowrap;
     overflow-y: hidden;
-    margin-left: 5vh;
-    margin-right: 5vh;
+    margin-left: 2vh;
+    margin-right: 2vh;
 }
 .container-scroll-menu-seleccion::-webkit-scrollbar {
 display: none;
 }
 .item-menu{
     scroll-snap-align: start;
-    width: 115px;
-    height: 50px;
+    width: 12vh;
+    height: 5vh;
     padding: 0;
+    font-family:Mela Pro  ;
     color: #9A9A9D;
     display: inline-block;
-    font-size: 20px;
+    font-size: 2.2vh;
     text-align: center;
     .item{
         border-bottom: 0.5vh solid red;
@@ -226,6 +243,30 @@ display: none;
 
     }
 
+}
+
+//estilos contenedor platos
+.container-platos{
+   scroll-snap-type: x mandatory;
+   white-space: nowrap;
+    width: 100%;
+    height: 50vh;
+    overflow-y: hidden;
+    margin-left: 2vh;
+    margin-right: 2vh;
+    .item-plato{
+      scroll-snap-align: start;
+      width: 30vh;
+      height: 5vh;
+      padding: 0;
+      font-family:Mela Pro  ;
+      color: #9A9A9D;
+      display: inline-block;
+      text-align: center;
+    }
+}
+.container-platos::-webkit-scrollbar {
+display: none;
 }
 
 </style>

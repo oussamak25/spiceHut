@@ -20,7 +20,7 @@
           src="/assets/img/imagenInicio.png"
         >
       </div>
-      <div>
+      <div class="btn" >
         <f7-button
           class="btnInicio"
           raised
@@ -49,10 +49,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.btn{
+    background:#FF4B3A ;
+}
 .contenedorPrincipal{
   display: flex;
   flex-direction: column;
-  flex-wrap:wrap ;
   width: 100%;
   height: 100%;
   background:#FF4B3A ;

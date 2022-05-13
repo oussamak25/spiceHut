@@ -8,7 +8,10 @@
       :placeholder="placeholder"
     >
     <div class="container__img">
-      <img class="imagen" src="/assets/img/ic_search.png">
+      <img
+        class="imagen"
+        src="/assets/img/ic_search.png"
+      >
     </div>
   </div>
 </template>
@@ -37,31 +40,31 @@ export default {
 
 }
 .container__img{
-    height: 55px;
-    width: 47px;
+    height: 8vh;
+    width: 7vh;
     background: #EFEEEE;
     display: flex;
     flex-direction: column;
     align-content: center;
     justify-content: center;
-    border-bottom-right-radius: 50%;
-    border-top-right-radius: 50%;
+    border-bottom-right-radius: 5vh;
+    border-top-right-radius: 5vh;
 }
 .container img{
-    width:35px;
-    height:35px;
+    width:5vh;
+    height:5vh;
     background: white;
     margin-right: 2vh;
 }
 .container input{
-    height: 55px;
+    height: 8vh;
     width: 100%;
     background: #EFEEEE;
     margin-right: 0px;
-    border-bottom-left-radius: 50px;
-    border-top-left-radius: 50px;
+    border-bottom-left-radius: 5vh;
+    border-top-left-radius: 5vh;
     padding-left: 3vh;
-    
+    font-size: 2.2vh;
 
 }
 
