@@ -32,6 +32,7 @@ export default {
         margin-bottom: -17vh;
         img{
             width: 26vh;
+
         }
     }
 

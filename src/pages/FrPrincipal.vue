@@ -272,6 +272,7 @@ export default {
     overflow-y: hidden;
     margin-left: 2vh;
     margin-right: 2vh;
+    margin-top: -4vh;
 }
 .container-scroll-menu-seleccion::-webkit-scrollbar {
 display: none;
@@ -320,8 +321,8 @@ display: none;
 }
 
 .menu-footer{
+  margin-top: 3vh;
   background: #F2F2F2;
-
   width: 100%;
   height: 100%;
 }
