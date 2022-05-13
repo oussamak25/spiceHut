@@ -110,6 +110,56 @@
         <div class="item-plato">
           <UCPlato />
         </div>
+        <div class="item-plato">
+          <UCPlato />
+        </div>
+        <div class="item-plato">
+          <UCPlato />
+        </div>
+        <div class="item-plato">
+          <UCPlato />
+        </div>
+      </div>
+      <!-- menu footer -->
+      <div class="menu-footer">
+        <f7-row>
+          <f7-col class="text-align-center">
+            <f7-link>
+              <f7-icon
+                f7="house"
+                size="30px"
+                class="icon"
+              />
+            </f7-link>
+          </f7-col>
+          <f7-col class="text-align-center">
+            <f7-link>
+              <f7-icon
+                f7="heart"
+                size="30px"
+                class="icon"
+              />
+            </f7-link>
+          </f7-col>
+          <f7-col class="text-align-center">
+            <f7-link>
+              <f7-icon
+                f7="person"
+                size="30px"
+                class="icon"
+              />
+            </f7-link>
+          </f7-col>
+          <f7-col class="text-align-center">
+            <f7-link>
+              <f7-icon
+                f7="gobackward"
+                size="30px"
+                class="icon"
+              />
+            </f7-link>
+          </f7-col>
+        </f7-row>
       </div>
     </div>
   </f7-page>
@@ -250,7 +300,7 @@ display: none;
    scroll-snap-type: x mandatory;
    white-space: nowrap;
     width: 100%;
-    height: 50vh;
+    height: 45vh;
     overflow-y: hidden;
     margin-left: 2vh;
     margin-right: 2vh;
@@ -269,4 +319,14 @@ display: none;
 display: none;
 }
 
+.menu-footer{
+  background: #F2F2F2;
+
+  width: 100%;
+  height: 100%;
+}
+
+.icon{
+  color: #BBBBBD;
+}
 </style>

@@ -42,7 +42,7 @@ export default {
         width: 27vh;
         height: 32vh;
         font-family:Mela Pro  ;
-        font-size: 25px;
+        font-size: 3.8vh;
         border-radius: 4vh;
 
         .item{
@@ -51,9 +51,9 @@ export default {
         }
         .item-precio{
             font-family:Mela Pro  ;
-            font-size: 20px;
+            font-size: 2.5vh;
             color:#FF4B3A ;
-            padding-bottom: 4vh;
+            padding-bottom: 6vh;
 
         }
     }
