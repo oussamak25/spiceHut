@@ -3,7 +3,10 @@
     name="FrPrincipal"
     class="container-page"
   >
-    <div class="sin-scroll">
+    <div
+      v-if="principal"
+      class="sin-scroll"
+    >
       <!-- nav bar panel derecho y carrito compra -->
 
       <div class="padding margin">
@@ -101,7 +104,10 @@
       </div>
       <!-- lista de platos segun seleccion en el menu -->
       <div class="container-platos">
-        <div class="item-plato">
+        <div
+          class="item-plato"
+          @click="OpenPlatoDescripcion"
+        >
           <UCPlato />
         </div>
         <div class="item-plato">
@@ -147,6 +153,7 @@
                 f7="person"
                 size="30px"
                 class="icon"
+                @click="prueba"
               />
             </f7-link>
           </f7-col>
@@ -162,17 +169,32 @@
         </f7-row>
       </div>
     </div>
+    <div v-if="descripcionPlato">
+      <UCPlatoDescripcion
+        :img="url"
+        nombre="aaaaaaaaaaaaaaaa"
+        precio="30€"
+        info-plato="plato tipico con ajo cebolla y mantequilla"
+        @back="PressBackDescripcionPlato"
+      />
+    </div>
   </f7-page>
 </template>
 
 <script>
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import {
+  doc, setDoc, getFirestore, getDoc,
+} from 'firebase/firestore';
 import UCSearchEmpty from '@/components/UCSearchEmpty.vue';
 import UCPlato from '@/components/UCPlato.vue';
+import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
 
 export default {
   components: {
     UCSearchEmpty,
     UCPlato,
+    UCPlatoDescripcion,
   },
   data() {
     return {
@@ -182,13 +204,42 @@ export default {
       Salads: false,
       Soups: false,
       Kids: false,
+      url: null, // url imagen
+      // pantallas de carga
+      descripcionPlato: false,
+      principal: true,
 
     };
   },
   created() {
-
+    const storage = getStorage();
+    getDownloadURL(ref(storage, 'images/ic_plato.png'))
+      .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+        console.log(url);
+        this.url = url;
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
   },
   methods: {
+    async prueba() {
+      /* await setDoc(doc(getFirestore(), 'cities', 'LA'), {
+        name: 'Los Angeles',
+        state: 'CA',
+        country: 'USA',
+      }); */
+      const docRef = doc(getFirestore(), 'Imagenes', 'img');
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+      }
+    },
     PressItemMenu(val) {
       if (val === 'Starters') {
         this.Starters = true;
@@ -239,6 +290,14 @@ export default {
         this.Kids = true;
       }
     },
+    OpenPlatoDescripcion() {
+      this.descripcionPlato = true;
+      this.principal = false;
+    },
+    PressBackDescripcionPlato() {
+      this.descripcionPlato = false;
+      this.principal = true;
+    },
   },
 
 };
@@ -249,7 +308,7 @@ export default {
 .container-page{
     width: 100%;
     height: 100%;
-    background: #F2F2F2;
+    background: #F6F6F9;
 }
 .sin-scroll{
     overflow-x:hidden;
@@ -322,7 +381,7 @@ display: none;
 
 .menu-footer{
   margin-top: 3vh;
-  background: #F2F2F2;
+  background: #F6F6F9;
   width: 100%;
   height: 100%;
 }

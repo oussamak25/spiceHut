@@ -15,10 +15,22 @@ import '../css/icons.css';
 import '../css/app.scss';
 
 // Import App Component
+import { initializeApp } from 'firebase/app';
 import App from '../components/app.vue';
 
+// firebase
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyB6UtV6bVo4gEin2q1lNrJIhbOqvkHcKpY',
+  authDomain: 'spicehut-e868d.firebaseapp.com',
+  projectId: 'spicehut-e868d',
+  storageBucket: 'spicehut-e868d.appspot.com',
+  messagingSenderId: '163352899073',
+  appId: '1:163352899073:web:b9fa2b354763a7e33a9a00',
+};
+initializeApp(firebaseConfig);
 
 // Init App
 const app = createApp(App);

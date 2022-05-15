@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "dom7": "^4.0.4",
+    "firebase": "^9.8.1",
     "framework7": "^7.0.2",
     "framework7-icons": "^5.0.5",
     "framework7-vue": "^7.0.2",
@@ -30,9 +31,9 @@
     "vue": "^3.2.33"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.5.4",
     "@vitejs/plugin-vue": "^2.3.2",
     "@vue/compiler-sfc": "^3.2.33",
-    "@babel/eslint-parser": "^7.5.4",
     "cpy-cli": "^4.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.15.0",

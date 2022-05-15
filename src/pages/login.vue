@@ -70,6 +70,7 @@
           class="email"
           type="email"
           placeholder="Your e-mail"
+          @change="EmailChange($event.target.value)"
         >
       </div>
 
@@ -79,6 +80,7 @@
           class="passw"
           type="password"
           placeholder="Your password"
+          @change="PasswChange($event.target.value)"
         >
       </div>
       <div class="input__forgot">
@@ -99,6 +101,9 @@
 </template>
 
 <script>
+
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+
 export default {
   props: {
     f7route: Object,
@@ -111,8 +116,8 @@ export default {
       traspasos: true, // pestaña de traspasos
       reprocesados: false, // pestaña de reprocesados
       btnText: 'Login', // texto del btono segun si es login o signup
-      emaiValue: null,
-      passwValue: null,
+      emaiValue: '',
+      passwValue: '',
 
     };
   },
@@ -134,16 +139,38 @@ export default {
       this.passwValue = val;
     },
     VerificacionIdentidad() {
-      console.log(this.passwValue);
+      /* console.log(this.btnText);
       console.log(this.emaiValue);
-      /*  if (this.btnText === 'Login') { */
-      /* if (this.emaiValue === 'Admin' && this.passwValue === 'Admin') { */
-      this.f7router.navigate('/frPrincipal/');
-      console.log('entras');
-      /*  }
+      console.log(this.passwValue);
+      if (this.btnText === 'Login') {
+        signInWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
+          .then((userCredential) => {
+            const { user } = userCredential;
+            console.log('Acceso correcto');
+            this.f7router.navigate('/frPrincipal/');
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            console.log(errorCode);
+            console.log(errorMessage);
+          });
       } else {
-        // comprobacions para el sign up
+        createUserWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
+          .then((userCredential) => {
+            const { user } = userCredential;
+            console.log('se registro correctamente');
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            console.log(errorCode);
+            console.log(errorMessage);
+          });
       } */
+      this.f7router.navigate('/frPrincipal/');
     },
   },
 

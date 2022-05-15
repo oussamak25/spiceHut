@@ -24,7 +24,7 @@ export default {
 
 <style lang="scss" scoped>
 .container{
-    background: #F2F2F2;
+    background: #F6F6F9;
     width: 27vh;
     text-align: center;
 
