@@ -180,6 +180,11 @@ export default {
 <style lang="scss" scoped>
 .container-page{
     background: #F2F2F2;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 .container-img{
     background: #FFFFFF;

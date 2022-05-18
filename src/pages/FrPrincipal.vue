@@ -47,7 +47,7 @@
       </div>
       <!-- buscador de comida -->
       <div class="padding margin">
-        <UCSearchEmpty />
+        <UCSearchEmpty @buscar="BuscarPlatosFiltro" />
       </div>
 
       <!-- menu con stroll para seleccion comida bebica entrantes ensaladas etc -->
@@ -103,27 +103,20 @@
         </div>
       </div>
       <!-- lista de platos segun seleccion en el menu -->
-      <div class="container-platos">
+      <div
+        class="container-platos"
+      >
         <div
+          v-for="(plato, i) in arrayTotalDePlatos"
+          :key="i"
           class="item-plato"
           @click="OpenPlatoDescripcion"
         >
-          <UCPlato />
-        </div>
-        <div class="item-plato">
-          <UCPlato />
-        </div>
-        <div class="item-plato">
-          <UCPlato />
-        </div>
-        <div class="item-plato">
-          <UCPlato />
-        </div>
-        <div class="item-plato">
-          <UCPlato />
-        </div>
-        <div class="item-plato">
-          <UCPlato />
+          <UCPlato
+            :img="url"
+            :nombre="plato.nombre"
+            :precio="plato.precio"
+          />
         </div>
       </div>
       <!-- menu footer -->
@@ -175,7 +168,14 @@
         nombre="aaaaaaaaaaaaaaaa"
         precio="30€"
         info-plato="plato tipico con ajo cebolla y mantequilla"
-        @back="PressBackDescripcionPlato"
+        @back="PressBack"
+      />
+    </div>
+    <div v-if="platosFiltro">
+      <UCPlatosFiltrados
+        :platos="arrayTotalDePlatos"
+        :img="url"
+        @back="PressBack"
       />
     </div>
   </f7-page>
@@ -189,12 +189,14 @@ import {
 import UCSearchEmpty from '@/components/UCSearchEmpty.vue';
 import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
+import UCPlatosFiltrados from '@/components/UCPlatosFiltrados.vue';
 
 export default {
   components: {
     UCSearchEmpty,
     UCPlato,
     UCPlatoDescripcion,
+    UCPlatosFiltrados,
   },
   data() {
     return {
@@ -208,6 +210,39 @@ export default {
       // pantallas de carga
       descripcionPlato: false,
       principal: true,
+      platosFiltro: false,
+      arrayTotalDePlatos: [
+        {
+          img: this.url,
+          nombre: 'Veggie tomato mix',
+          precio: '35€',
+        },
+        {
+          img: this.url,
+          nombre: 'Veggie tomato mix',
+          precio: '35€',
+        },
+        {
+          img: this.url,
+          nombre: 'Veggie tomato mix',
+          precio: '35€',
+        },
+        {
+          img: this.url,
+          nombre: 'Veggie tomato mix',
+          precio: '35€',
+        },
+        {
+          img: this.url,
+          nombre: 'Veggie tomato mix',
+          precio: '35€',
+        },
+        {
+          img: this.url,
+          nombre: 'Veggie tomato mix',
+          precio: '35€',
+        },
+      ],
 
     };
   },
@@ -293,10 +328,17 @@ export default {
     OpenPlatoDescripcion() {
       this.descripcionPlato = true;
       this.principal = false;
+      this.platosFiltro = false;
     },
-    PressBackDescripcionPlato() {
+    PressBack() {
       this.descripcionPlato = false;
       this.principal = true;
+      this.platosFiltro = false;
+    },
+    BuscarPlatosFiltro() {
+      this.descripcionPlato = false;
+      this.principal = false;
+      this.platosFiltro = true;
     },
   },
 

@@ -3,6 +3,10 @@ import AboutPage from '../pages/about.vue';
 import Login from '../pages/login.vue';
 import NotFoundPage from '../pages/404.vue';
 import FrPrincipal from '@/pages/FrPrincipal.vue';
+import FrCarrito from '@/pages/FrCarrito.vue';
+import FrDelivery from '@/pages/FrDelivery.vue';
+
+
 
 const routes = [
   {
@@ -20,6 +24,14 @@ const routes = [
   {
     path: '/frPrincipal/',
     component: FrPrincipal,
+  },
+  {
+    path: '/frCarrito/',
+    component: FrCarrito,
+  },
+  {
+    path: '/frDelivery/',
+    component: FrDelivery,
   },
   {
     path: '(.*)',

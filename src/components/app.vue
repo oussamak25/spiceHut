@@ -2,7 +2,6 @@
   <f7-app v-bind="f7params">
     <f7-view
       main
-      class="safe-areas"
       url="/"
     />
   </f7-app>
@@ -70,3 +69,6 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+
+</style>

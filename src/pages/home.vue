@@ -42,7 +42,8 @@ export default {
   },
   methods: {
     pressClick() {
-      this.f7router.navigate('/login/');
+      /* this.f7router.navigate('/login/'); */
+      this.f7router.navigate('/frDelivery/');
     },
   },
 };
@@ -52,12 +53,17 @@ export default {
 .btn{
     background:#FF4B3A ;
 }
+::-webkit-scrollbar {
+    display: none;
+}
 .contenedorPrincipal{
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
   background:#FF4B3A ;
+  overflow-y: hidden;
+  overflow-x: hidden;
   .img-gorro{
     margin-top: 5vh;
     margin-left: 5vh;
@@ -70,8 +76,8 @@ export default {
     font-family:Wacca  ;
   }
   .imgPersonas{
-    width:100%;
-    height: 100%;
+    width:48.5vh;
+    height: 48vh;
 
   }
   .btnInicio{

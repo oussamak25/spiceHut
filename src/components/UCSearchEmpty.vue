@@ -7,7 +7,10 @@
       type="text"
       :placeholder="placeholder"
     >
-    <div class="container__img">
+    <div
+      class="container__img"
+      @click="$emit('buscar')"
+    >
       <img
         class="imagen"
         src="/assets/img/ic_search.png"

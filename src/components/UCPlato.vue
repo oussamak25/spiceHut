@@ -2,15 +2,15 @@
   <div class="container">
     <div class="plato">
       <img
-        src="/assets/img/ic_plato.png"
+        :src="img"
       >
     </div>
     <div class="info">
       <div class="item-precio">
-        Precio
+        {{ precio }}
       </div>
       <div class="item">
-        Info plato
+        {{ nombre }}
       </div>
     </div>
   </div>
@@ -18,6 +18,12 @@
 
 <script>
 export default {
+  props: {
+    img: { type: String, default: null },
+    nombre: { type: String, default: '' },
+    precio: { type: String, default: '' },
+
+  },
 
 };
 </script>
@@ -47,6 +53,7 @@ export default {
         border-radius: 4vh;
 
         .item{
+            font-size: 3vh;
             position: relative;
             bottom: 0;
         }
