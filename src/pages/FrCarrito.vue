@@ -15,7 +15,7 @@
               f7="chevron_left"
               size="30px"
               color="black"
-              @click="$emit('back')"
+              @click="ComeBack"
             />
           </f7-link>
         </f7-col>
@@ -66,11 +66,11 @@
       </div>
     </div>
     <div>
-        <f7-button
+      <f7-button
         class="btn-order"
         raised
         round
-        @click="VerificacionIdentidad"
+        @click="CompleteOrder"
       >
         Complete Order
       </f7-button>
@@ -80,7 +80,18 @@
 
 <script>
 export default {
-
+  props: {
+    f7route: Object,
+    f7router: Object,
+  },
+  methods: {
+    ComeBack() {
+      this.f7router.navigate('/frPrincipal/');
+    },
+    CompleteOrder() {
+      this.f7router.navigate('/frDelivery/');
+    },
+  },
 };
 </script>
 
@@ -185,14 +196,28 @@ export default {
     }
 
 }
-    .btn-order{
-        width: 75%;
-        height: 7vh;
-        font-weight: 500;
-        margin-top: 5vh;
-        margin-left: 5vh;
-        background: #FF4B3A;
-        color: white;
-    }
+.btn-order{
+    width: 75%;
+    height: 7vh;
+    font-weight: 500;
+    margin-top: 5vh;
+    margin-left: 5vh;
+    background: #FF4B3A;
+    color: white;
+}
 
+.head-text {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #42526E;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+.head-btn {
+  width: 50px;
+  height: 50px;
+  float: right;
+}
 </style>

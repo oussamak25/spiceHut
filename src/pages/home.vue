@@ -42,8 +42,7 @@ export default {
   },
   methods: {
     pressClick() {
-      /* this.f7router.navigate('/login/'); */
-      this.f7router.navigate('/frDelivery/');
+      this.f7router.navigate('/login/');
     },
   },
 };

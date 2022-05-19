@@ -14,15 +14,6 @@
             />
           </f7-link>
         </f7-col>
-        <f7-col class="display-flex flex-direction-row-reverse">
-          <f7-link>
-            <f7-icon
-              f7="heart"
-              size="30px"
-              color="black"
-            />
-          </f7-link>
-        </f7-col>
       </f7-row>
     </div>
     <!-- plato fotos -->

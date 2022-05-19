@@ -25,7 +25,7 @@
           <f7-col class="display-flex flex-direction-row-reverse">
             <f7-link
 
-              panel-open="right"
+              @click="OpenCard"
             >
               <f7-icon
                 f7="cart"
@@ -110,7 +110,7 @@
           v-for="(plato, i) in arrayTotalDePlatos"
           :key="i"
           class="item-plato"
-          @click="OpenPlatoDescripcion"
+          @click="OpenPlatoDescripcion(plato)"
         >
           <UCPlato
             :img="url"
@@ -120,54 +120,13 @@
         </div>
       </div>
       <!-- menu footer -->
-      <div class="menu-footer">
-        <f7-row>
-          <f7-col class="text-align-center">
-            <f7-link>
-              <f7-icon
-                f7="house"
-                size="30px"
-                class="icon"
-              />
-            </f7-link>
-          </f7-col>
-          <f7-col class="text-align-center">
-            <f7-link>
-              <f7-icon
-                f7="heart"
-                size="30px"
-                class="icon"
-              />
-            </f7-link>
-          </f7-col>
-          <f7-col class="text-align-center">
-            <f7-link>
-              <f7-icon
-                f7="person"
-                size="30px"
-                class="icon"
-                @click="prueba"
-              />
-            </f7-link>
-          </f7-col>
-          <f7-col class="text-align-center">
-            <f7-link>
-              <f7-icon
-                f7="gobackward"
-                size="30px"
-                class="icon"
-              />
-            </f7-link>
-          </f7-col>
-        </f7-row>
-      </div>
     </div>
     <div v-if="descripcionPlato">
       <UCPlatoDescripcion
         :img="url"
-        nombre="aaaaaaaaaaaaaaaa"
-        precio="30€"
-        info-plato="plato tipico con ajo cebolla y mantequilla"
+        :nombre="platoSelected.nombre"
+        :precio="platoSelected.precio"
+        :info-plato="platoSelected.infoPlato"
         @back="PressBack"
       />
     </div>
@@ -198,6 +157,10 @@ export default {
     UCPlatoDescripcion,
     UCPlatosFiltrados,
   },
+  props: {
+    f7route: Object,
+    f7router: Object,
+  },
   data() {
     return {
       Starters: false,
@@ -211,36 +174,43 @@ export default {
       descripcionPlato: false,
       principal: true,
       platosFiltro: false,
+      platoSelected: null, // plato seleccionado en el scroll
       arrayTotalDePlatos: [
         {
           img: this.url,
           nombre: 'Veggie tomato mix',
           precio: '35€',
+          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
         },
         {
           img: this.url,
           nombre: 'Veggie tomato mix',
           precio: '35€',
+          infoPlato: 'Muslo de pollo marinado al horno hindú servido en plancha caliente',
         },
         {
           img: this.url,
           nombre: 'Veggie tomato mix',
           precio: '35€',
+          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
         },
         {
           img: this.url,
           nombre: 'Veggie tomato mix',
           precio: '35€',
+          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
         },
         {
           img: this.url,
           nombre: 'Veggie tomato mix',
           precio: '35€',
+          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
         },
         {
           img: this.url,
           nombre: 'Veggie tomato mix',
           precio: '35€',
+          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
         },
       ],
 
@@ -325,7 +295,8 @@ export default {
         this.Kids = true;
       }
     },
-    OpenPlatoDescripcion() {
+    OpenPlatoDescripcion(val) {
+      this.platoSelected = val;
       this.descripcionPlato = true;
       this.principal = false;
       this.platosFiltro = false;
@@ -339,6 +310,9 @@ export default {
       this.descripcionPlato = false;
       this.principal = false;
       this.platosFiltro = true;
+    },
+    OpenCard() {
+      this.f7router.navigate('/frCarrito/');
     },
   },
 
@@ -373,7 +347,9 @@ export default {
     overflow-y: hidden;
     margin-left: 2vh;
     margin-right: 2vh;
-    margin-top: -4vh;
+    margin-top: -3vh;
+    margin-bottom: 2vh;
+
 }
 .container-scroll-menu-seleccion::-webkit-scrollbar {
 display: none;
@@ -402,7 +378,7 @@ display: none;
    scroll-snap-type: x mandatory;
    white-space: nowrap;
     width: 100%;
-    height: 45vh;
+    height: 50vh;
     overflow-y: hidden;
     margin-left: 2vh;
     margin-right: 2vh;
@@ -419,13 +395,6 @@ display: none;
 }
 .container-platos::-webkit-scrollbar {
 display: none;
-}
-
-.menu-footer{
-  margin-top: 3vh;
-  background: #F6F6F9;
-  width: 100%;
-  height: 100%;
 }
 
 .icon{
