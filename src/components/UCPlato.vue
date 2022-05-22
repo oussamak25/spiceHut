@@ -32,12 +32,12 @@ export default {
   watch: {
 
     img(val) {
-      this.imagen = `../assets/img/prod/${this.img}`;
+      this.imagen = `../static/${this.img}`;
     },
   },
 
   created() {
-    this.imagen = `../assets/img/prod/${this.img}`;
+    this.imagen = `../static/${this.img}`;
   },
 
 };
