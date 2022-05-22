@@ -123,7 +123,7 @@
     </div>
     <div v-if="descripcionPlato">
       <UCPlatoDescripcion
-        :img="platoSelected.img"
+        :img="`../assets/img/prod/${platoSelected.img}`"
         :nombre="platoSelected.nombre"
         :precio="platoSelected.precio"
         :info-plato="platoSelected.descEs"
