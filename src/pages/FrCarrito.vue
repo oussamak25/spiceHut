@@ -52,13 +52,19 @@
             />
           </div>
           <div class="container-increment">
-            <div class="restar">
+            <div
+              class="restar"
+              @click="Decrement"
+            >
               -
             </div>
             <div class="valor">
-              0
+              {{ valorInput }}
             </div>
-            <div class="sumar">
+            <div
+              class="sumar"
+              @click="Increment"
+            >
               +
             </div>
           </div>
@@ -84,12 +90,27 @@ export default {
     f7route: Object,
     f7router: Object,
   },
+  data() {
+    return {
+      valorInput: 1,
+    };
+  },
   methods: {
     ComeBack() {
       this.f7router.navigate('/frPrincipal/');
     },
     CompleteOrder() {
       this.f7router.navigate('/frDelivery/');
+    },
+    Increment() {
+      if (this.valorInput < 20) {
+        this.valorInput += 1;
+      }
+    },
+    Decrement() {
+      if (this.valorInput > 1) {
+        this.valorInput -= 1;
+      }
     },
   },
 };

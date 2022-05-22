@@ -139,7 +139,7 @@ export default {
       this.passwValue = val;
     },
     VerificacionIdentidad() {
-      /* console.log(this.btnText);
+     /*  console.log(this.btnText);
       console.log(this.emaiValue);
       console.log(this.passwValue);
       if (this.btnText === 'Login') {

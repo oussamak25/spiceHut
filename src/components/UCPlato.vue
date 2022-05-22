@@ -2,12 +2,12 @@
   <div class="container">
     <div class="plato">
       <img
-        :src="img"
+        :src="imagen"
       >
     </div>
     <div class="info">
       <div class="item-precio">
-        {{ precio }}
+        {{ precio }}€
       </div>
       <div class="item">
         {{ nombre }}
@@ -23,6 +23,21 @@ export default {
     nombre: { type: String, default: '' },
     precio: { type: String, default: '' },
 
+  },
+  data() {
+    return {
+      imagen: null,
+    };
+  },
+  watch: {
+
+    img(val) {
+      this.imagen = `../assets/img/prod/${this.img}`;
+    },
+  },
+
+  created() {
+    this.imagen = `../assets/img/prod/${this.img}`;
   },
 
 };

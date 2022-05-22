@@ -20,7 +20,7 @@
     <div class="container-imagen">
       <img
         class="imagen"
-        :src="img"
+        :src="imagen"
       >
     </div>
 
@@ -28,13 +28,16 @@
       {{ nombre }}
     </div>
     <div class="precio">
-      {{ precio }}
+      {{ precio }}€
     </div>
 
     <div class="container-info">
       Dish info
       <div class="info">
         {{ infoPlato }}
+      </div>
+      <div class="info">
+        {{ infoPlatoEn }}
       </div>
     </div>
 
@@ -58,6 +61,21 @@ export default {
     nombre: { type: String, default: '' },
     precio: { type: String, default: '' },
     infoPlato: { type: String, default: '' },
+    infoPlatoEn: { type: String, default: '' },
+  },
+  data() {
+    return {
+      imagen: null,
+    };
+  },
+  watch: {
+
+    img(val) {
+      this.imagen = `../assets/img/prod/${this.img}`;
+    },
+  },
+  created() {
+    this.imagen = `../assets/img/prod/${this.img}`;
   },
 
 };

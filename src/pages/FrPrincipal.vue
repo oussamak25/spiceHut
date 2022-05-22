@@ -79,26 +79,26 @@
         </div>
         <div
           class="item-menu"
-          @click="PressItemMenu('Salads')"
+          @click="PressItemMenu('Rice')"
         >
-          <div :class="{ 'item': Salads }">
-            Salads
+          <div :class="{ 'item': Rice }">
+            Rice
           </div>
         </div>
         <div
           class="item-menu"
-          @click="PressItemMenu('Soups')"
+          @click="PressItemMenu('Nan')"
         >
-          <div :class="{ 'item': Soups }">
-            Soups
+          <div :class="{ 'item': Nan }">
+            Nan/Pan
           </div>
         </div>
         <div
           class="item-menu"
-          @click="PressItemMenu('Kids')"
+          @click="PressItemMenu('Desserts')"
         >
-          <div :class="{ 'item': Kids }">
-            Kids
+          <div :class="{ 'item': Desserts }">
+            Desserts
           </div>
         </div>
       </div>
@@ -107,13 +107,13 @@
         class="container-platos"
       >
         <div
-          v-for="(plato, i) in arrayTotalDePlatos"
+          v-for="(plato, i) in arrayMostrar"
           :key="i"
           class="item-plato"
           @click="OpenPlatoDescripcion(plato)"
         >
           <UCPlato
-            :img="url"
+            :img="plato.img"
             :nombre="plato.nombre"
             :precio="plato.precio"
           />
@@ -123,17 +123,17 @@
     </div>
     <div v-if="descripcionPlato">
       <UCPlatoDescripcion
-        :img="url"
+        :img="platoSelected.img"
         :nombre="platoSelected.nombre"
         :precio="platoSelected.precio"
-        :info-plato="platoSelected.infoPlato"
+        :info-plato="platoSelected.descEs"
+        :info-plato-en="platoSelected.descEn"
         @back="PressBack"
       />
     </div>
     <div v-if="platosFiltro">
       <UCPlatosFiltrados
-        :platos="arrayTotalDePlatos"
-        :img="url"
+        :platos="arrayFiltrado"
         @back="PressBack"
       />
     </div>
@@ -166,67 +166,24 @@ export default {
       Starters: false,
       Main: true,
       Drinks: false,
-      Salads: false,
-      Soups: false,
-      Kids: false,
+      Rice: false,
+      Nan: false,
+      Desserts: false,
       url: null, // url imagen
       // pantallas de carga
       descripcionPlato: false,
       principal: true,
       platosFiltro: false,
       platoSelected: null, // plato seleccionado en el scroll
-      arrayTotalDePlatos: [
-        {
-          img: this.url,
-          nombre: 'Veggie tomato mix',
-          precio: '35€',
-          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
-        },
-        {
-          img: this.url,
-          nombre: 'Veggie tomato mix',
-          precio: '35€',
-          infoPlato: 'Muslo de pollo marinado al horno hindú servido en plancha caliente',
-        },
-        {
-          img: this.url,
-          nombre: 'Veggie tomato mix',
-          precio: '35€',
-          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
-        },
-        {
-          img: this.url,
-          nombre: 'Veggie tomato mix',
-          precio: '35€',
-          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
-        },
-        {
-          img: this.url,
-          nombre: 'Veggie tomato mix',
-          precio: '35€',
-          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
-        },
-        {
-          img: this.url,
-          nombre: 'Veggie tomato mix',
-          precio: '35€',
-          infoPlato: 'Pollo sin hueso marinado con cebollas, servido con salsa aparte',
-        },
-      ],
+      arrayTotalDePlatos: [],
+      arrayMostrar: [],
+      arrayParaFiltrar: [],
+      arrayFiltrado: [],
 
     };
   },
   created() {
-    const storage = getStorage();
-    getDownloadURL(ref(storage, 'images/ic_plato.png'))
-      .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-        console.log(url);
-        this.url = url;
-      })
-      .catch((error) => {
-        // Handle any errors
-      });
+    this.prueba();
   },
   methods: {
     async prueba() {
@@ -235,64 +192,87 @@ export default {
         state: 'CA',
         country: 'USA',
       }); */
-      const docRef = doc(getFirestore(), 'Imagenes', 'img');
+      const docRef = doc(getFirestore(), 'Productos', 'p');
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         console.log('Document data:', docSnap.data());
+        this.arrayTotalDePlatos = docSnap.data();
+        this.arrayMostrar = this.arrayTotalDePlatos.Main;
       } else {
         // doc.data() will be undefined in this case
         console.log('No such document!');
       }
+
+      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Main);
+      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Starters);
+      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Drinks);
+      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Rice);
+      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Nan);
+      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Desserts);
+
+      // filtro
     },
     PressItemMenu(val) {
       if (val === 'Starters') {
+        this.arrayMostrar = [];
+        this.arrayMostrar = this.arrayTotalDePlatos.Starters;
         this.Starters = true;
         this.Main = false;
         this.Drinks = false;
-        this.Salads = false;
-        this.Soups = false;
-        this.Kids = false;
+        this.Rice = false;
+        this.Nan = false;
+        this.Desserts = false;
       }
       if (val === 'Main') {
+        this.arrayMostrar = [];
+        this.arrayMostrar = this.arrayTotalDePlatos.Main;
         this.Starters = false;
         this.Main = true;
         this.Drinks = false;
-        this.Salads = false;
-        this.Soups = false;
-        this.Kids = false;
+        this.Rice = false;
+        this.Nan = false;
+        this.Desserts = false;
       }
       if (val === 'Drinks') {
+        this.arrayMostrar = [];
+        this.arrayMostrar = this.arrayTotalDePlatos.Drinks;
         this.Starters = false;
         this.Main = false;
         this.Drinks = true;
-        this.Salads = false;
-        this.Soups = false;
-        this.Kids = false;
+        this.Rice = false;
+        this.Nan = false;
+        this.Desserts = false;
       }
-      if (val === 'Salads') {
+      if (val === 'Rice') {
+        this.arrayMostrar = [];
+        this.arrayMostrar = this.arrayTotalDePlatos.Rice;
         this.Starters = false;
         this.Main = false;
         this.Drinks = false;
-        this.Salads = true;
-        this.Soups = false;
-        this.Kids = false;
+        this.Rice = true;
+        this.Nan = false;
+        this.Desserts = false;
       }
-      if (val === 'Soups') {
+      if (val === 'Nan') {
+        this.arrayMostrar = [];
+        this.arrayMostrar = this.arrayTotalDePlatos.Nan;
         this.Starters = false;
         this.Main = false;
         this.Drinks = false;
-        this.Salads = false;
-        this.Soups = true;
-        this.Kids = false;
+        this.Rice = false;
+        this.Nan = true;
+        this.Desserts = false;
       }
-      if (val === 'Kids') {
+      if (val === 'Desserts') {
+        this.arrayMostrar = [];
+        this.arrayMostrar = this.arrayTotalDePlatos.Desserts;
         this.Starters = false;
         this.Main = false;
         this.Drinks = false;
-        this.Salads = false;
-        this.Soups = false;
-        this.Kids = true;
+        this.Rice = false;
+        this.Nan = false;
+        this.Desserts = true;
       }
     },
     OpenPlatoDescripcion(val) {
@@ -306,7 +286,9 @@ export default {
       this.principal = true;
       this.platosFiltro = false;
     },
-    BuscarPlatosFiltro() {
+    BuscarPlatosFiltro(val) {
+      this.arrayFiltrado = this.arrayParaFiltrar.filter((e) => e.nombre.toLowerCase().includes(val.toLocaleLowerCase()));
+
       this.descripcionPlato = false;
       this.principal = false;
       this.platosFiltro = true;

@@ -245,6 +245,9 @@ export default {
       popupOpened: false,
     };
   },
+  computed: {
+
+  },
   methods: {
     ProceedDelivery() {
       this.popupOpened = true;

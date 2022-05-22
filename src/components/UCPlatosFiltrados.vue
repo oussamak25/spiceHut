@@ -1,8 +1,8 @@
 <template>
-  <div class="sin-scroll">
+  <div class="sin-scroll" v-if="!descripcionPlato">
     <!-- nav bar panel derecho y carrito compra -->
 
-    <div class="navbar-fix">
+    <div class="navbar-fix" >
       <f7-row>
         <f7-col
           width="20"
@@ -31,37 +31,60 @@
       v-for="(plato, i) in platos"
       :key="i"
       class="platos"
+      @click="OpenPlatoDescripcion(plato)"
     >
       <UCPlato
-        :img="img"
+        :img="plato.img"
         :precio="plato.precio"
         :nombre="plato.nombre"
       />
     </div>
+  </div>
+
+  <div v-if="descripcionPlato">
+    <UCPlatoDescripcion
+      :img="img"
+      :nombre="platoSelected.nombre"
+      :precio="platoSelected.precio"
+      :info-plato="platoSelected.infoPlato"
+      @back="PressBack"
+    />
   </div>
 </template>
 
 <script>
 import { stringify } from 'json5';
 import UCPlato from '@/components/UCPlato.vue';
+import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
 
 export default {
   components: {
     UCPlato,
+    UCPlatoDescripcion,
   },
   props: {
     platos: { type: Array, default: null },
-    img: { type: String, default: null },
   },
   data() {
     return {
       platosDer: [],
       platosIz: [],
       Drinks: false,
+      descripcionPlato: false,
+      platoSelected: null,
     };
   },
   created() {
-    
+
+  },
+  methods: {
+    OpenPlatoDescripcion(val) {
+      this.platoSelected = val;
+      this.descripcionPlato = true;
+    },
+    PressBack() {
+      this.descripcionPlato = false;
+    },
   },
 };
 </script>

@@ -6,10 +6,11 @@
     <input
       type="text"
       :placeholder="placeholder"
+      @input="valorCampo = $event.target.value"
     >
     <div
       class="container__img"
-      @click="$emit('buscar')"
+      @click="$emit('buscar', valorCampo )"
     >
       <img
         class="imagen"
@@ -27,6 +28,7 @@ export default {
   data() {
     return {
       presed: true,
+      valorCampo: 'sinBusqueda',
     };
   },
 
