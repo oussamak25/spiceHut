@@ -13,7 +13,7 @@
         <f7-row>
           <f7-col class="display-flex flex-direction-row">
             <f7-link
-              panel-open="right"
+              panel-open="left"
             >
               <f7-icon
                 f7="list_bullet"
@@ -137,6 +137,55 @@
         @back="PressBack"
       />
     </div>
+    <f7-panel
+      left
+      reveal
+      resizable
+    >
+      <f7-view>
+        <f7-page class="container-panel">
+          <div class="container-panel__options">
+            <div class="container-panel__item">
+              <f7-icon
+                f7="person_circle"
+                size="4vh"
+                color="white"
+                class="icono"
+              />
+              Profile
+            </div>
+            <div class="container-panel__border">
+              <f7-icon
+                class="icono"
+                f7="cart"
+                size="4vh"
+                color="white"
+              />
+              Orders
+            </div>
+            <div class="container-panel__border">
+              <f7-icon
+                class="icono"
+                f7="info_circle"
+                size="4vh"
+                color="white"
+              />
+              About us
+            </div>
+          </div>
+
+          <div class="container-panel__sign-out">
+            Sign-out
+            <f7-icon
+              class="icono"
+              f7="arrow_right"
+              size="4vh"
+              color="white"
+            />
+          </div>
+        </f7-page>
+      </f7-view>
+    </f7-panel>
   </f7-page>
 </template>
 
@@ -382,4 +431,54 @@ display: none;
 .icon{
   color: #BBBBBD;
 }
+
+//estilos panel izquierdo
+
+.container-panel{
+  overflow-y: hidden;
+  overflow-x: hidden;
+  background:#FF4B3A ;
+  width: 100%;
+  height: 100%;
+  &__options{
+    width: 75%;
+    margin-top: 16vh;
+  }
+  &__item{
+    padding-left: 8vh;
+    font-size: 3vh;
+    margin-top: 2vh;
+    font-weight: 600;
+    color: white;
+    height: 2vh;
+    .icono{
+      color: white;
+    }
+  }
+  &__border{
+    padding-left: 8vh;
+    padding-top: 2vh;
+    font-size: 3vh;
+    font-weight: 600;
+    color: white;
+    margin-top: 5vh;
+    margin-bottom: -2vh;
+    border-top: 1px solid white;
+    width: 100%;
+    .icono{
+      color: white;
+    }
+  }
+
+  &__sign-out{
+    font-size: 3vh;
+    font-weight: 600;
+    color: white;
+    position:absolute;
+    bottom: 5vh;
+    left: 10vh;
+    
+  }
+}
+
 </style>

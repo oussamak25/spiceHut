@@ -56,6 +56,7 @@
 import { stringify } from 'json5';
 import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 export default {
   components: {

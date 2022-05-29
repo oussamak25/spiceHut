@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+
 export default {
   props: {
     img: { type: String, default: null },
@@ -32,12 +34,30 @@ export default {
   watch: {
 
     img(val) {
-      this.imagen = `../static/${this.img}`;
+      const storage = getStorage();
+      getDownloadURL(ref(storage, `${this.img}`))
+        .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+          console.log(url);
+          this.imagen = url;
+        })
+        .catch((error) => {
+        // Handle any errors
+        });
     },
   },
 
   created() {
-    this.imagen = `../static/${this.img}`;
+    const storage = getStorage();
+    getDownloadURL(ref(storage, `${this.img}`))
+      .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+        console.log(url);
+        this.imagen = url;
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
   },
 
 };
