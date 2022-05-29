@@ -103,6 +103,7 @@
 <script>
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   props: {
@@ -121,7 +122,12 @@ export default {
 
     };
   },
+  computed: {
+    ...mapState(['loginNeeded', 'userData']),
+    
+  },
   methods: {
+    ...mapActions(['setLoginNeeded', 'setUserData']),
     PressLogin() {
       this.btnText = 'Login';
       this.loginActivo = true;
@@ -139,7 +145,7 @@ export default {
       this.passwValue = val;
     },
     VerificacionIdentidad() {
-     /*  console.log(this.btnText);
+      /*  console.log(this.btnText);
       console.log(this.emaiValue);
       console.log(this.passwValue);
       if (this.btnText === 'Login') {
@@ -170,6 +176,7 @@ export default {
             console.log(errorMessage);
           });
       } */
+      this.setLoginNeeded(false);
       this.f7router.navigate('/frPrincipal/');
     },
   },

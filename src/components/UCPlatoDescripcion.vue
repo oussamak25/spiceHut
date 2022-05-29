@@ -20,7 +20,7 @@
     <div class="container-imagen">
       <img
         class="imagen"
-        :src="imagen"
+        :src="img"
       >
     </div>
 
@@ -68,37 +68,14 @@ export default {
   },
   data() {
     return {
-      imagen: null,
+     
     };
   },
   watch: {
 
-    img(val) {
-      const storage = getStorage();
-      getDownloadURL(ref(storage, `${this.img}`))
-        .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-          console.log(url);
-          this.imagen = url;
-        })
-        .catch((error) => {
-        // Handle any errors
-        });
-      
-    },
   },
   created() {
-    const storage = getStorage();
-      getDownloadURL(ref(storage, `${this.img}`))
-        .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-          console.log(url);
-          this.imagen = url;
-        })
-        .catch((error) => {
-        // Handle any errors
-        });
-   
+
   },
 
 };

@@ -1,6 +1,9 @@
 // Import Vue
 import { createApp } from 'vue';
 
+// import de mi store personal
+
+import store from '@/store';
 // Import Framework7
 import Framework7 from 'framework7/lite-bundle';
 
@@ -34,6 +37,7 @@ initializeApp(firebaseConfig);
 
 // Init App
 const app = createApp(App);
+app.use(store);
 
 // Register Framework7 Vue components
 registerComponents(app);

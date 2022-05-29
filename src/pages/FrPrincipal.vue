@@ -13,7 +13,7 @@
         <f7-row>
           <f7-col class="display-flex flex-direction-row">
             <f7-link
-              panel-open="left"
+              @click="panelIzquierdo = true"
             >
               <f7-icon
                 f7="list_bullet"
@@ -27,11 +27,16 @@
 
               @click="OpenCard"
             >
-              <f7-icon
-                f7="cart"
-                size="30px"
-                color="black"
-              />
+              <div class="carrito">
+                <f7-icon
+                  f7="cart"
+                  size="30px"
+                  color="black"
+                />
+                <div class="numero">
+                  1
+                </div>
+              </div>
             </f7-link>
           </f7-col>
         </f7-row>
@@ -138,9 +143,11 @@
       />
     </div>
     <f7-panel
+      :opened="panelIzquierdo"
       left
       reveal
       resizable
+      @panel:closed="panelIzquierdo = false"
     >
       <f7-view>
         <f7-page class="container-panel">
@@ -174,7 +181,10 @@
             </div>
           </div>
 
-          <div class="container-panel__sign-out">
+          <div
+            class="container-panel__sign-out"
+            @click="SignOut"
+          >
             Sign-out
             <f7-icon
               class="icono"
@@ -186,6 +196,7 @@
         </f7-page>
       </f7-view>
     </f7-panel>
+    <UCPreload v-if="correcto" />
   </f7-page>
 </template>
 
@@ -194,10 +205,12 @@ import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import {
   doc, setDoc, getFirestore, getDoc,
 } from 'firebase/firestore';
+import { mapActions, mapState } from 'vuex';
 import UCSearchEmpty from '@/components/UCSearchEmpty.vue';
 import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
 import UCPlatosFiltrados from '@/components/UCPlatosFiltrados.vue';
+import UCPreload from '@/components/UCPreload.vue';
 
 export default {
   components: {
@@ -205,11 +218,13 @@ export default {
     UCPlato,
     UCPlatoDescripcion,
     UCPlatosFiltrados,
+    UCPreload,
   },
   props: {
     f7route: Object,
     f7router: Object,
   },
+
   data() {
     return {
       Starters: false,
@@ -224,48 +239,46 @@ export default {
       principal: true,
       platosFiltro: false,
       platoSelected: null, // plato seleccionado en el scroll
-      arrayTotalDePlatos: [],
       arrayMostrar: [],
       arrayParaFiltrar: [],
       arrayFiltrado: [],
+      mostrarLoader: true,
+      panelIzquierdo: false,
 
     };
   },
-  created() {
-    this.prueba();
+  computed: {
+    ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders']),
+
   },
+  created() {
+    this.Filtro();
+  },
+
   methods: {
-    async prueba() {
+    ...mapActions(['setLoginNeeded', 'setUserData']),
+    Filtro() {
       /* await setDoc(doc(getFirestore(), 'cities', 'LA'), {
         name: 'Los Angeles',
         state: 'CA',
         country: 'USA',
       }); */
-      const docRef = doc(getFirestore(), 'Productos', 'p');
-      const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
-        this.arrayTotalDePlatos = docSnap.data();
-        this.arrayMostrar = this.arrayTotalDePlatos.Main;
-      } else {
-        // doc.data() will be undefined in this case
-        console.log('No such document!');
-      }
+      this.arrayMostrar = this.appData.Main;
 
-      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Main);
-      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Starters);
-      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Drinks);
-      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Rice);
-      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Nan);
-      this.arrayParaFiltrar.push(...this.arrayTotalDePlatos.Desserts);
+      this.arrayParaFiltrar.push(...this.appData.Main);
+      this.arrayParaFiltrar.push(...this.appData.Starters);
+      this.arrayParaFiltrar.push(...this.appData.Drinks);
+      this.arrayParaFiltrar.push(...this.appData.Rice);
+      this.arrayParaFiltrar.push(...this.appData.Nan);
+      this.arrayParaFiltrar.push(...this.appData.Desserts);
 
       // filtro
     },
     PressItemMenu(val) {
       if (val === 'Starters') {
         this.arrayMostrar = [];
-        this.arrayMostrar = this.arrayTotalDePlatos.Starters;
+        this.arrayMostrar = this.appData.Starters;
         this.Starters = true;
         this.Main = false;
         this.Drinks = false;
@@ -275,7 +288,7 @@ export default {
       }
       if (val === 'Main') {
         this.arrayMostrar = [];
-        this.arrayMostrar = this.arrayTotalDePlatos.Main;
+        this.arrayMostrar = this.appData.Main;
         this.Starters = false;
         this.Main = true;
         this.Drinks = false;
@@ -285,7 +298,7 @@ export default {
       }
       if (val === 'Drinks') {
         this.arrayMostrar = [];
-        this.arrayMostrar = this.arrayTotalDePlatos.Drinks;
+        this.arrayMostrar = this.appData.Drinks;
         this.Starters = false;
         this.Main = false;
         this.Drinks = true;
@@ -295,7 +308,7 @@ export default {
       }
       if (val === 'Rice') {
         this.arrayMostrar = [];
-        this.arrayMostrar = this.arrayTotalDePlatos.Rice;
+        this.arrayMostrar = this.appData.Rice;
         this.Starters = false;
         this.Main = false;
         this.Drinks = false;
@@ -305,7 +318,7 @@ export default {
       }
       if (val === 'Nan') {
         this.arrayMostrar = [];
-        this.arrayMostrar = this.arrayTotalDePlatos.Nan;
+        this.arrayMostrar = this.appData.Nan;
         this.Starters = false;
         this.Main = false;
         this.Drinks = false;
@@ -315,7 +328,7 @@ export default {
       }
       if (val === 'Desserts') {
         this.arrayMostrar = [];
-        this.arrayMostrar = this.arrayTotalDePlatos.Desserts;
+        this.arrayMostrar = this.appData.Desserts;
         this.Starters = false;
         this.Main = false;
         this.Drinks = false;
@@ -344,6 +357,11 @@ export default {
     },
     OpenCard() {
       this.f7router.navigate('/frCarrito/');
+    },
+    SignOut() {
+      this.panelIzquierdo = false;
+      this.setLoginNeeded(true);
+      this.f7router.navigate('/');
     },
   },
 
@@ -477,8 +495,20 @@ display: none;
     position:absolute;
     bottom: 5vh;
     left: 10vh;
-    
+
   }
+}
+
+.numero{
+ background:#ee594b ;
+ border-radius: 50%;
+ width: 3vh;
+ height: 3vh;
+ text-align: center;
+ font-size: 2vh;
+ font-weight: 700;
+ margin-top: -6vh;
+ margin-left: 2vh;
 }
 
 </style>
