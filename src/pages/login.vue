@@ -61,7 +61,8 @@
         <input
           class="email"
           type="email"
-          placeholder="Your e-mail"
+          placeholder="Your name"
+          @change="NameChange($event.target.value)"
         >
       </div>
       <div class="container-i__input">
@@ -104,6 +105,9 @@
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { mapActions, mapState } from 'vuex';
+import {
+  doc, setDoc, getFirestore, getDoc,
+} from 'firebase/firestore';
 
 export default {
   props: {
@@ -114,17 +118,16 @@ export default {
     return {
       loginActivo: true,
       signUpActivo: false,
-      traspasos: true, // pestaña de traspasos
-      reprocesados: false, // pestaña de reprocesados
       btnText: 'Login', // texto del btono segun si es login o signup
       emaiValue: '',
       passwValue: '',
+      nameValue: '',
 
     };
   },
   computed: {
     ...mapState(['loginNeeded', 'userData']),
-    
+
   },
   methods: {
     ...mapActions(['setLoginNeeded', 'setUserData']),
@@ -144,15 +147,33 @@ export default {
     PasswChange(val) {
       this.passwValue = val;
     },
-    VerificacionIdentidad() {
-      /*  console.log(this.btnText);
-      console.log(this.emaiValue);
-      console.log(this.passwValue);
+    NameChange(val) {
+      this.nameValue = val;
+    },
+    async getUserData() {
+      const docRef = doc(getFirestore(), 'users', this.emaiValue);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+        this.setUserData(docSnap.data().userData);
+      }
+      console.log('No such document!');
+    },
+    async VerificacionIdentidad() {
       if (this.btnText === 'Login') {
         signInWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
           .then((userCredential) => {
             const { user } = userCredential;
             console.log('Acceso correcto');
+            console.log(user);
+            this.setUserData({
+              nombre: this.nameValue,
+              correo: this.emaiValue,
+              contraseña: this.passwValue,
+            });
+            this.getUserData();
+            this.setLoginNeeded(false);
             this.f7router.navigate('/frPrincipal/');
           })
           .catch((error) => {
@@ -166,6 +187,27 @@ export default {
         createUserWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
           .then((userCredential) => {
             const { user } = userCredential;
+            console.log(user);
+            setDoc(doc(getFirestore(), 'users', this.emaiValue), {
+              userData: {
+                nombre: this.nameValue,
+                correo: this.emaiValue,
+                contraseña: this.passwValue,
+                apellido: '',
+                tel: 0,
+                genero: '',
+                direccion: '',
+              },
+              orders: [],
+
+            });
+            this.setUserData({
+              nombre: this.nameValue,
+              correo: this.emaiValue,
+              contraseña: this.passwValue,
+            });
+            this.setLoginNeeded(false);
+            this.f7router.navigate('/frPrincipal/');
             console.log('se registro correctamente');
           })
           .catch((error) => {
@@ -175,9 +217,7 @@ export default {
             console.log(errorCode);
             console.log(errorMessage);
           });
-      } */
-      this.setLoginNeeded(false);
-      this.f7router.navigate('/frPrincipal/');
+      }
     },
   },
 

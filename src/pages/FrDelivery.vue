@@ -42,7 +42,7 @@
       <div class="container-direccion_items">
         <div class="item-nombre">
           <div>
-            Nombre Cliente
+            {{ userData.nombre }}   {{ userData.apellido }}
           </div>
         </div>
         <div class="item-direccion border-top">
@@ -50,6 +50,8 @@
             <textarea
               class="textarea"
               placeholder="Dirección del pedido"
+              :value="adress"
+              @change="AdressChange($event.target.value)"
             />
           </div>
         </div>
@@ -58,7 +60,9 @@
             <input
               class="input"
               type="number"
+              :value="phone"
               placeholder="Número de contacto"
+              @change="PhoneChange($event.target.value)"
             >
           </div>
         </div>
@@ -85,12 +89,12 @@
           <div>
             <img
               class="img"
-              src="@/assets/img/tarjeta.png"
+              src="@/assets/img/billete.png"
             >
-            Bank account
+            Cash on delivery
           </div>
         </div>
-        <div class="item border-top">
+        <!-- <div class="item border-top">
           <div>
             <f7-radio
               color="red"
@@ -107,7 +111,7 @@
             >
             Cash on delivery
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
 
@@ -153,12 +157,18 @@
       </div>
 
       <div class="col-de">
-        35,50€
+        {{ total }}€
       </div>
     </div>
-
+    <div
+      v-if="mostrarError"
+      class="btn"
+    >
+      Complete the fields address and phone number
+    </div>
     <f7-button
       class="btn-proceed"
+      :class="{'disabled': select}"
       raised
       round
       @click="ProceedDelivery"
@@ -198,7 +208,7 @@
             Total to pay
           </div>
           <div class="precio">
-            35,00€
+            {{ total }}€
           </div>
         </div>
 
@@ -229,6 +239,11 @@
 </template>
 
 <script>
+import {
+  doc, setDoc, getFirestore, getDoc, updateDoc, arrayUnion, arrayRemove,
+} from 'firebase/firestore';
+import { mapActions, mapState } from 'vuex';
+
 export default {
   props: {
     f7route: Object,
@@ -243,14 +258,37 @@ export default {
       doorDelivery: null,
       pickUp: null,
       popupOpened: false,
+      select: true,
+      total: 0,
+      adress: '',
+      phone: 0,
+      mostrarError: false,
+
     };
   },
   computed: {
+    ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders', 'actualOrder']),
 
   },
+  created() {
+    this.adress = this.userData.direccion;
+    this.phone = this.userData.tel;
+    let totalPedido = 0;
+    for (let i = 0; i < this.actualOrder.length; i++) {
+      const element = this.actualOrder[i];
+      totalPedido += element.precio * element.cantidad;
+    }
+    this.total = totalPedido;
+  },
   methods: {
+    ...mapActions(['setLoginNeeded', 'setUserData', 'setActualOrder', 'setUserOrders']),
     ProceedDelivery() {
-      this.popupOpened = true;
+      if (this.doorDelivery === true && (this.adress === '' || this.adress === undefined || this.phone === 0 || this.phone === undefined)) {
+        this.mostrarError = true;
+      } else {
+        this.popupOpened = true;
+        this.mostrarError = false;
+      }
     },
     PressCard() {
       this.pagoSelected = false;
@@ -263,14 +301,22 @@ export default {
       this.bankSelected = true;
     },
     PressDoorDelivery() {
+      this.select = false;
       this.mostrarMetodosPago = false;
       this.doorDelivery = true;
       this.pickUp = false;
+    },
+    AdressChange(val) {
+      this.adress = val;
+    },
+    PhoneChange(val) {
+      this.phone = val;
     },
     PressPickUp() {
       this.mostrarMetodosPago = true;
       this.doorDelivery = false;
       this.pickUp = true;
+      this.select = false;
     },
     ComeBack() {
       this.f7router.navigate('/frCarrito/');
@@ -281,6 +327,71 @@ export default {
     ConfirmarPopup() {
       this.popupOpened = false;
       this.f7router.navigate('/frPrincipal/');
+
+      this.setOrder();
+      this.UpdateUserData();
+    },
+    async setOrder() {
+      let totalPedido = 0;
+      for (let i = 0; i < this.actualOrder.length; i++) {
+        const element = this.actualOrder[i];
+        totalPedido += element.precio * element.cantidad;
+      }
+      this.total = totalPedido;
+      const obj = {
+        ...this.actualOrder, id: this.userOrders, fecha: this.printDate(), total: totalPedido,
+      };
+      const docs = doc(getFirestore(), 'users', this.userData.correo);
+
+      await updateDoc(docs, {
+        orders: arrayUnion(obj),
+      });
+
+      this.setActualOrder([]);
+      const id = this.userOrders + 1;
+      this.setUserOrders(id);
+    },
+    async getUserData() {
+      const docRef = doc(getFirestore(), 'users', this.userData.correo);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+        this.setUserData(docSnap.data().userData);
+      }
+      console.log('No such document!');
+    },
+    async UpdateUserData() {
+      const docs = doc(getFirestore(), 'users', this.userData.correo);
+      let apellido2 = '';
+      let tel2 = '';
+      let genero2 = '';
+      if (this.userData.apellido !== undefined) {
+        apellido2 = this.userData.apellido;
+      }
+      if (!this.userData.tel !== undefined) {
+        tel2 = this.userData.tel;
+      }
+      if (!this.userData.genero !== undefined) {
+        genero2 = this.userData.genero;
+      }
+      await updateDoc(docs, {
+        userData: {
+          nombre: this.userData.nombre,
+          correo: this.userData.correo,
+          contraseña: this.userData.contraseña,
+
+          apellido: apellido2,
+          tel: tel2,
+          genero: genero2,
+          direccion: this.adress,
+        },
+      });
+
+      this.getUserData();
+    },
+    printDate() {
+      return new Date().toLocaleDateString();
     },
 
   },
@@ -532,4 +643,14 @@ export default {
     color: white;
   }
 }
+.disabled{
+  opacity: 0.1;
+  pointer-events: none;
+}
+.btn{
+        width: 100%;
+        text-align: center;
+        margin-bottom: -2vh;
+        color:red;
+      }
 </style>

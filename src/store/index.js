@@ -5,8 +5,10 @@ export default createStore({
   state: {
     loginNeeded: true,
     userData: null,
-    userOrders: null,
-    appData: null,
+    userOrders: 0,
+    appData: [],
+    actualOrder: [],
+    orders: [],
 
   },
   actions: {
@@ -21,6 +23,18 @@ export default createStore({
     },
     setAppData(context, value) {
       context.commit('setAppData', value);
+    },
+    setActualOrder(context, value) {
+      context.commit('setActualOrder', value);
+    },
+    addActualOrder(context, value) {
+      context.commit('addActualOrder', value);
+    },
+    delActualOrder(context, value) {
+      context.commit('delActualOrder', value);
+    },
+    setOrders(context, value) {
+      context.commit('setOrders', value);
     },
 
   },
@@ -38,7 +52,32 @@ export default createStore({
     setAppData(state, value) {
       state.appData = value;
     },
-
+    setActualOrder(state, value) {
+      state.actualOrder = value;
+    },
+    setOrders(state, value) {
+      state.orders = value;
+    },
+    addActualOrder(state, value) {
+      let exist = false;
+      for (let i = 0; i < state.actualOrder.length; i++) {
+        const element = state.actualOrder[i];
+        if (value.nombre === element.nombre) {
+          exist = true;
+        }
+      }
+      if (!exist) {
+        state.actualOrder.push(value);
+      }
+    },
+    delActualOrder(state, value) {
+      for (let i = 0; i < state.actualOrder.length; i++) {
+        const element = state.actualOrder[i];
+        if (value === element) {
+          state.actualOrder.splice(i, 1);
+        }
+      }
+    },
   },
 
   getters: {
@@ -53,6 +92,12 @@ export default createStore({
     },
     getAppData(state) {
       return state.appData;
+    },
+    getOrders(state) {
+      return state.orders;
+    },
+    getActualOrder(state) {
+      return state.actualOrder;
     },
 
   },

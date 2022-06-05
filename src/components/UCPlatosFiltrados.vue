@@ -1,8 +1,11 @@
 <template>
-  <div class="sin-scroll" v-if="!descripcionPlato">
+  <div
+    v-if="!descripcionPlato"
+    class="sin-scroll"
+  >
     <!-- nav bar panel derecho y carrito compra -->
 
-    <div class="navbar-fix" >
+    <div class="navbar-fix">
       <f7-row>
         <f7-col
           width="20"
@@ -43,20 +46,23 @@
 
   <div v-if="descripcionPlato">
     <UCPlatoDescripcion
-      :img="img"
+      :img="platoSelected.img"
       :nombre="platoSelected.nombre"
       :precio="platoSelected.precio"
-      :info-plato="platoSelected.infoPlato"
+      :info-plato="platoSelected.descEs"
+      :info-plato-en="platoSelected.descEn"
       @back="PressBack"
+      @addToCar="AddToCarPress"
     />
   </div>
 </template>
 
 <script>
 import { stringify } from 'json5';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { mapActions } from 'vuex';
 import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 export default {
   components: {
@@ -79,6 +85,11 @@ export default {
 
   },
   methods: {
+    ...mapActions(['setLoginNeeded', 'setUserData', 'setActualOrder', 'addActualOrder']),
+    AddToCarPress() {
+      this.addActualOrder(this.platoSelected);
+      this.descripcionPlato = false;
+    },
     OpenPlatoDescripcion(val) {
       this.platoSelected = val;
       this.descripcionPlato = true;

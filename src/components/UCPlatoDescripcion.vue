@@ -46,7 +46,7 @@
         class="btn-add"
         raised
         round
-        @click="AddToCar"
+        @click="$emit('addToCar')"
       >
         Add to cart
       </f7-button>
@@ -68,7 +68,7 @@ export default {
   },
   data() {
     return {
-     
+
     };
   },
   watch: {
@@ -76,6 +76,8 @@ export default {
   },
   created() {
 
+  },
+  methods: {
   },
 
 };

@@ -31,44 +31,15 @@
 
     <!-- container para contener los platos pedidos -->
     <div class="container-pedido">
-      <div class="container-pedido_item">
-        <div class="container-pedido_item-img">
-          <img src="@/assets/img/ic_plato.png">
-        </div>
-        <div class="container-pedido_item-info">
-          <div class="nombre">
-            Veggie tomato mix
-          </div>
-          <div class="precio">
-            35,00€
-          </div>
-        </div>
-        <div class="container-pedido_item-increment">
-          <div class="icon">
-            <f7-icon
-              f7="xmark"
-              size="30px"
-              color="black"
-            />
-          </div>
-          <div class="container-increment">
-            <div
-              class="restar"
-              @click="Decrement"
-            >
-              -
-            </div>
-            <div class="valor">
-              {{ valorInput }}
-            </div>
-            <div
-              class="sumar"
-              @click="Increment"
-            >
-              +
-            </div>
-          </div>
-        </div>
+      <div
+        v-for="(plato, i) in actualOrder"
+        :key="i"
+        class="container-pedido_item"
+      >
+        <UCItemCarritoVue
+          :plato="plato"
+          @principal="ComeBack"
+        />
       </div>
     </div>
     <div>
@@ -81,35 +52,105 @@
         Complete Order
       </f7-button>
     </div>
+    <f7-popup
+      class="pop-up-confirm"
+      close-by-backdrop-click="true"
+      :opened="popupOpened"
+      @popup:closed="popupOpened = false"
+    >
+      <f7-page>
+        <div class="head-popup">
+          <f7-row>
+            <f7-col width="80">
+              <div class="head-text">
+                To confirm order
+              </div>
+            </f7-col>
+          </f7-row>
+        </div>
+        <div class="direccion">
+          <div class="titulo">
+            Address
+          </div>
+          <div class="valor">
+            Valor de la direccion cuando la tengamos
+          </div>
+        </div>
+
+        <div class="total-pedido">
+          <div class="titulo">
+            Total to pay
+          </div>
+          <div class="precio">
+            {{ total }}€
+          </div>
+        </div>
+
+        <div class="footer-popup">
+          <div>
+            <f7-button
+              class="btn-cancel"
+              round
+              @click="popupOpened = false"
+            >
+              Cancel
+            </f7-button>
+          </div>
+          <div>
+            <f7-button
+              class="btn-confirmar"
+              raised
+              round
+              @click="ConfirmarPopup"
+            >
+              Proceed
+            </f7-button>
+          </div>
+        </div>
+      </f7-page>
+    </f7-popup>
   </f7-page>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+import UCItemCarritoVue from '@/components/UCItemCarrito.vue';
+
 export default {
+  components: {
+    UCItemCarritoVue,
+  },
   props: {
     f7route: Object,
     f7router: Object,
   },
   data() {
     return {
-      valorInput: 1,
+      popupOpened: false,
+
     };
   },
+  computed: {
+    ...mapState(['actualOrder']),
+
+  },
   methods: {
+    ...mapActions(['delActualOrder', 'addCantidadOrder']),
     ComeBack() {
       this.f7router.navigate('/frPrincipal/');
     },
     CompleteOrder() {
       this.f7router.navigate('/frDelivery/');
+      this.popupOpened = true;
     },
-    Increment() {
-      if (this.valorInput < 20) {
-        this.valorInput += 1;
+    Increment(plato) {
+      if (plato.cantidad < 20) {
+        plato.cantidad += 1;
       }
     },
-    Decrement() {
-      if (this.valorInput > 1) {
-        this.valorInput -= 1;
+    Decrement(plato) {
+      if (plato.cantidad > 1) {
+        plato.cantidad -= 1;
       }
     },
   },
@@ -136,86 +177,6 @@ export default {
     overflow-x: hidden;
     width: 100%;
     height: 70%;
-    .container-pedido_item{
-         width: 45vh;
-        margin-top: 5vh;
-        margin-left: 2vh;
-        border-radius: 15vh;
-        background: white;
-        display: flex;
-        flex-direction: row;
-
-        &-img img{
-            width: 15vh;
-            height: 15vh;
-        }
-
-        &-info{
-            display: flex;
-            flex-direction: column;
-            margin-top: 3vh;
-            .nombre{
-                font-family:Mela Pro  ;
-                font-size: 2.5vh;
-                font-weight: 500;
-            }
-            .precio{
-                font-family:Mela Pro  ;
-                font-size: 2.5vh;
-                color:#FF4B3A ;
-            }
-
-        }
-
-        &-increment{
-
-            display: flex;
-            flex-direction: column;
-
-            .icon{
-                text-align: right;
-                margin-right: 3vh;
-                margin-top: 1vh;
-            }
-            .container-increment{
-                display: flex;
-                flex-direction: row;
-                border-radius: 15vh;
-                font-size: 3vh;
-                background: red;
-                color: white;
-                width: 13vh;
-                height: 4vh;
-                margin-top: 3vh;
-                margin-right: 3vh;
-                .restar{
-                    text-align: center;
-                    border-right: 1px solid black;
-                    width: 13vh;
-                    height: 4vh;
-                    border-top-left-radius: 15vh;
-                    border-bottom-left-radius: 15vh ;
-
-                }
-                .valor{
-                    text-align: center;
-                    width: 13vh;
-                    height: 4vh;
-                }
-                .sumar{
-                    text-align: center;
-                    border-left: 1px solid black;
-                    width: 13vh;
-                    height: 4vh;
-                    border-top-right-radius: 15vh;
-                    border-bottom-right-radius: 15vh ;
-                }
-
-            }
-
-        }
-    }
-
 }
 .btn-order{
     width: 75%;
@@ -240,5 +201,69 @@ export default {
   width: 50px;
   height: 50px;
   float: right;
+}
+.pop-up-confirm{
+  width:40vh;
+  height:42vh;
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-top:-18vh;
+  margin-left:-20vh;
+  border-radius: 5vh;
+
+  .direccion{
+    margin-top: 2vh;
+    margin-left: 4vh;
+    height: 13vh;
+    .titulo{
+      color: #b0b0b7;
+      font-size: 2.5vh;
+    }
+    .valor{
+      font-size: 2.2vh;
+
+    }
+  }
+
+  .total-pedido{
+    display: flex;
+    flex-direction: row;
+    height: 6vh;
+    margin-top: 1vh;
+    margin-left: 4vh;
+    .titulo{
+      color: #b0b0b7;
+      font-size: 2.5vh;
+    }
+    .precio{
+      font-size: 2.5vh;
+      margin-left: 12vh;
+      font-weight: 500;
+      color: #FF4B3A;
+    }
+  }
+}
+.footer-popup{
+  display: flex;
+  flex-direction: row;
+  margin-top: 2vh;
+
+  .btn-cancel{
+    width: 14vh;
+    height: 7vh;
+    border:1px solid white;
+    font-weight: 500;
+    background: white;
+    color: #808080;
+    margin-left: 1vh;
+  }
+  .btn-confirmar{
+    width: 22vh;
+    height: 7vh;
+    font-weight: 500;
+    background: #FF4B3A;
+    color: white;
+  }
 }
 </style>

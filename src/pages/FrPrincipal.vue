@@ -34,7 +34,7 @@
                   color="black"
                 />
                 <div class="numero">
-                  1
+                  {{ actualOrder.length }}
                 </div>
               </div>
             </f7-link>
@@ -109,6 +109,7 @@
       </div>
       <!-- lista de platos segun seleccion en el menu -->
       <div
+        v-show="!spinnerOpen"
         class="container-platos"
       >
         <div
@@ -134,6 +135,7 @@
         :info-plato="platoSelected.descEs"
         :info-plato-en="platoSelected.descEn"
         @back="PressBack"
+        @addToCar="AddToCarPress"
       />
     </div>
     <div v-if="platosFiltro">
@@ -152,7 +154,10 @@
       <f7-view>
         <f7-page class="container-panel">
           <div class="container-panel__options">
-            <div class="container-panel__item">
+            <div
+              class="container-panel__item"
+              @click="OpenProfile"
+            >
               <f7-icon
                 f7="person_circle"
                 size="4vh"
@@ -161,7 +166,10 @@
               />
               Profile
             </div>
-            <div class="container-panel__border">
+            <div
+              class="container-panel__border"
+              @click="OpenOrders"
+            >
               <f7-icon
                 class="icono"
                 f7="cart"
@@ -170,14 +178,29 @@
               />
               Orders
             </div>
-            <div class="container-panel__border">
+            <div
+              class="container-panel__border"
+              @click="OpenAbout"
+            >
+              <f7-icon
+                class="icono"
+                f7="person_3"
+                size="4vh"
+                color="white"
+              />
+              About us
+            </div>
+            <div
+              class="container-panel__border"
+              @click="OpenHorario"
+            >
               <f7-icon
                 class="icono"
                 f7="info_circle"
                 size="4vh"
                 color="white"
               />
-              About us
+              Info
             </div>
           </div>
 
@@ -196,7 +219,8 @@
         </f7-page>
       </f7-view>
     </f7-panel>
-    <UCPreload v-if="correcto" />
+    <!--  <UCPreload v-if="correcto" /> -->
+    <UCSpinner v-if="spinnerOpen" />
   </f7-page>
 </template>
 
@@ -211,6 +235,7 @@ import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
 import UCPlatosFiltrados from '@/components/UCPlatosFiltrados.vue';
 import UCPreload from '@/components/UCPreload.vue';
+import UCSpinner from '@/components/UCSpinner.vue';
 
 export default {
   components: {
@@ -219,6 +244,7 @@ export default {
     UCPlatoDescripcion,
     UCPlatosFiltrados,
     UCPreload,
+    UCSpinner,
   },
   props: {
     f7route: Object,
@@ -228,13 +254,12 @@ export default {
   data() {
     return {
       Starters: false,
-      Main: true,
+      Main: false,
       Drinks: false,
       Rice: false,
       Nan: false,
       Desserts: false,
-      url: null, // url imagen
-      // pantallas de carga
+      url: null,
       descripcionPlato: false,
       principal: true,
       platosFiltro: false,
@@ -244,26 +269,22 @@ export default {
       arrayFiltrado: [],
       mostrarLoader: true,
       panelIzquierdo: false,
+      spinnerOpen: false,
 
     };
   },
   computed: {
-    ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders']),
+    ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders', 'actualOrder']),
 
   },
   created() {
     this.Filtro();
+    this.PressItemMenu('Main');
   },
 
   methods: {
-    ...mapActions(['setLoginNeeded', 'setUserData']),
+    ...mapActions(['setLoginNeeded', 'setUserData', 'setActualOrder', 'addActualOrder']),
     Filtro() {
-      /* await setDoc(doc(getFirestore(), 'cities', 'LA'), {
-        name: 'Los Angeles',
-        state: 'CA',
-        country: 'USA',
-      }); */
-
       this.arrayMostrar = this.appData.Main;
 
       this.arrayParaFiltrar.push(...this.appData.Main);
@@ -275,8 +296,35 @@ export default {
 
       // filtro
     },
-    PressItemMenu(val) {
+    Sleep(tiempo) {
+      return new Promise((resolve) => setTimeout(resolve, tiempo));
+    },
+    OpenHorario() {
+      this.f7router.navigate('/horario/');
+      this.panelIzquierdo = false;
+    },
+    OpenAbout() {
+      this.f7router.navigate('/about/');
+      this.panelIzquierdo = false;
+    },
+    OpenProfile() {
+      this.f7router.navigate('/profile/');
+      this.panelIzquierdo = false;
+    },
+    OpenOrders() {
+      this.f7router.navigate('/orders/');
+      this.panelIzquierdo = false;
+    },
+    AddToCarPress() {
+      this.addActualOrder(this.platoSelected);
+      this.descripcionPlato = false;
+      this.principal = true;
+      this.platosFiltro = false;
+    },
+    async PressItemMenu(val) {
       if (val === 'Starters') {
+        this.spinnerOpen = true;
+        await this.Sleep(1000);
         this.arrayMostrar = [];
         this.arrayMostrar = this.appData.Starters;
         this.Starters = true;
@@ -285,8 +333,11 @@ export default {
         this.Rice = false;
         this.Nan = false;
         this.Desserts = false;
+        this.spinnerOpen = false;
       }
       if (val === 'Main') {
+        this.spinnerOpen = true;
+        await this.Sleep(1000);
         this.arrayMostrar = [];
         this.arrayMostrar = this.appData.Main;
         this.Starters = false;
@@ -295,8 +346,11 @@ export default {
         this.Rice = false;
         this.Nan = false;
         this.Desserts = false;
+        this.spinnerOpen = false;
       }
       if (val === 'Drinks') {
+        this.spinnerOpen = true;
+        await this.Sleep(1000);
         this.arrayMostrar = [];
         this.arrayMostrar = this.appData.Drinks;
         this.Starters = false;
@@ -305,8 +359,11 @@ export default {
         this.Rice = false;
         this.Nan = false;
         this.Desserts = false;
+        this.spinnerOpen = false;
       }
       if (val === 'Rice') {
+        this.spinnerOpen = true;
+        await this.Sleep(1000);
         this.arrayMostrar = [];
         this.arrayMostrar = this.appData.Rice;
         this.Starters = false;
@@ -315,8 +372,11 @@ export default {
         this.Rice = true;
         this.Nan = false;
         this.Desserts = false;
+        this.spinnerOpen = false;
       }
       if (val === 'Nan') {
+        this.spinnerOpen = true;
+        await this.Sleep(1000);
         this.arrayMostrar = [];
         this.arrayMostrar = this.appData.Nan;
         this.Starters = false;
@@ -325,8 +385,11 @@ export default {
         this.Rice = false;
         this.Nan = true;
         this.Desserts = false;
+        this.spinnerOpen = false;
       }
       if (val === 'Desserts') {
+        this.spinnerOpen = true;
+        await this.Sleep(1000);
         this.arrayMostrar = [];
         this.arrayMostrar = this.appData.Desserts;
         this.Starters = false;
@@ -335,6 +398,7 @@ export default {
         this.Rice = false;
         this.Nan = false;
         this.Desserts = true;
+        this.spinnerOpen = false;
       }
     },
     OpenPlatoDescripcion(val) {
@@ -350,13 +414,12 @@ export default {
     },
     BuscarPlatosFiltro(val) {
       this.arrayFiltrado = this.arrayParaFiltrar.filter((e) => e.nombre.toLowerCase().includes(val.toLocaleLowerCase()));
-
       this.descripcionPlato = false;
       this.principal = false;
       this.platosFiltro = true;
     },
     OpenCard() {
-      this.f7router.navigate('/frCarrito/');
+      if (this.actualOrder.length !== 0) { this.f7router.navigate('/frCarrito/'); }
     },
     SignOut() {
       this.panelIzquierdo = false;
