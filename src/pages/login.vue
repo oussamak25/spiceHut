@@ -48,10 +48,42 @@
           @change="PasswChange($event.target.value)"
         >
       </div>
-      <div class="input__forgot">
+      <div
+        class="input__forgot"
+        @click="ForgotPassw"
+      >
         Forgot password?
       </div>
+      <div
+        v-if="mostrarErrorLogin"
+        class="input__forgot"
+      >
+        {{ errorSalidaLogin }}
+      </div>
     </div>
+
+    <div
+      v-if="resetPass"
+      class="container-i"
+    >
+      <div class="container-i__input">
+        Email address
+        <input
+          class="email"
+          type="email"
+          placeholder="Your e-mail"
+          @change="EmailChangeReset($event.target.value)"
+        >
+      </div>
+
+      <div
+        v-if="mostrarErrorReset"
+        class="input__forgot"
+      >
+        {{ errorSalidaReset }}
+      </div>
+    </div>
+
     <div
       v-if="signUpActivo"
       class="container-i"
@@ -84,9 +116,15 @@
           @change="PasswChange($event.target.value)"
         >
       </div>
-      <div class="input__forgot">
-        Forgot password?
+      <div
+        v-if="mostrarErrorSign"
+        class="input__forgot"
+      >
+        {{ errorSalidaSign }}
       </div>
+    </div>
+    <div>
+      <UCSpinner v-if="showSpiner" />
     </div>
     <div>
       <f7-button
@@ -103,13 +141,19 @@
 
 <script>
 
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword, sendPasswordResetEmail,
+} from 'firebase/auth';
 import { mapActions, mapState } from 'vuex';
 import {
   doc, setDoc, getFirestore, getDoc,
 } from 'firebase/firestore';
+import UCSpinner from '@/components/UCSpinner.vue';
 
 export default {
+  components: {
+    UCSpinner,
+  },
   props: {
     f7route: Object,
     f7router: Object,
@@ -118,10 +162,19 @@ export default {
     return {
       loginActivo: true,
       signUpActivo: false,
+      resetPass: false,
       btnText: 'Login', // texto del btono segun si es login o signup
       emaiValue: '',
+      emailValueReset: '',
       passwValue: '',
       nameValue: '',
+      mostrarErrorLogin: false,
+      errorSalidaLogin: '',
+      mostrarErrorSign: false,
+      errorSalidaSign: '',
+      mostrarErrorReset: false,
+      errorSalidaReset: '',
+      showSpiner: false,
 
     };
   },
@@ -135,14 +188,63 @@ export default {
       this.btnText = 'Login';
       this.loginActivo = true;
       this.signUpActivo = false;
+      this.resetPass = false;
+      this.errorSalidaSign = '';
+      this.errorSalidaReset = '';
     },
     PressSignUp() {
       this.btnText = 'SingUp';
       this.loginActivo = false;
       this.signUpActivo = true;
+      this.resetPass = false;
+      this.errorSalidaLogin = '';
+      this.errorSalidaReset = '';
+    },
+    ForgotPassw() {
+      this.loginActivo = false;
+      this.signUpActivo = false;
+      this.resetPass = true;
+      this.errorSalidaLogin = '';
+      this.errorSalidaSign = '';
+      this.btnText = 'Reset Password';
+    },
+    SendEmail() {
+      const auth = getAuth();
+      this.showSpiner = true;
+      this.loginActivo = false;
+      this.signUpActivo = false;
+      this.resetPass = false;
+      sendPasswordResetEmail(auth, this.emailValueReset)
+        .then(() => {
+          this.showSpiner = false;
+          this.loginActivo = false;
+          this.signUpActivo = false;
+          this.resetPass = true;
+          this.mostrarErrorReset = true;
+          this.errorSalidaReset = 'The email was sent correctly, check your spam tray';
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          if (errorCode === 'auth/missing-email') {
+            this.showSpiner = false;
+            this.loginActivo = false;
+            this.signUpActivo = false;
+            this.resetPass = true;
+            this.mostrarErrorReset = true;
+            this.errorSalidaReset = 'Invalid email error';
+          }
+          this.showSpiner = false;
+          this.loginActivo = false;
+          this.signUpActivo = false;
+          this.resetPass = true;
+        });
     },
     EmailChange(val) {
       this.emaiValue = val;
+    },
+    EmailChangeReset(val) {
+      this.emailValueReset = val;
     },
     PasswChange(val) {
       this.passwValue = val;
@@ -162,6 +264,10 @@ export default {
     },
     async VerificacionIdentidad() {
       if (this.btnText === 'Login') {
+        this.showSpiner = true;
+        this.loginActivo = false;
+        this.signUpActivo = false;
+        this.resetPass = false;
         signInWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
           .then((userCredential) => {
             const { user } = userCredential;
@@ -179,44 +285,104 @@ export default {
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-
+            if (errorCode === 'auth/invalid-email' || errorCode === 'auth/internal-error' || errorCode === 'auth/user-not-found') {
+              this.mostrarErrorLogin = true;
+              this.errorSalidaLogin = 'Invalid email or password';
+              this.showSpiner = false;
+              this.loginActivo = true;
+              this.signUpActivo = false;
+              this.resetPass = false;
+            }
+            if (errorCode === 'auth/wrong-password') {
+              this.mostrarErrorLogin = true;
+              this.errorSalidaLogin = 'Invalid password';
+              this.showSpiner = false;
+              this.loginActivo = true;
+              this.signUpActivo = false;
+              this.resetPass = false;
+            }
+            this.showSpiner = false;
+            this.loginActivo = true;
+            this.signUpActivo = false;
+            this.resetPass = false;
             console.log(errorCode);
             console.log(errorMessage);
           });
-      } else {
-        createUserWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
-          .then((userCredential) => {
-            const { user } = userCredential;
-            console.log(user);
-            setDoc(doc(getFirestore(), 'users', this.emaiValue), {
-              userData: {
+      }
+      if (this.btnText === 'SingUp') {
+        if (this.nameValue !== '') {
+          this.showSpiner = true;
+          this.loginActivo = false;
+          this.signUpActivo = false;
+          this.resetPass = false;
+          createUserWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
+            .then((userCredential) => {
+              const { user } = userCredential;
+              console.log(user);
+              setDoc(doc(getFirestore(), 'users', this.emaiValue), {
+                userData: {
+                  nombre: this.nameValue,
+                  correo: this.emaiValue,
+                  contraseña: this.passwValue,
+                  apellido: '',
+                  tel: 0,
+                  genero: '',
+                  direccion: '',
+                },
+                orders: [],
+
+              });
+              this.setUserData({
                 nombre: this.nameValue,
                 correo: this.emaiValue,
                 contraseña: this.passwValue,
-                apellido: '',
-                tel: 0,
-                genero: '',
-                direccion: '',
-              },
-              orders: [],
+              });
+              this.setLoginNeeded(false);
+              this.f7router.navigate('/frPrincipal/');
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              if (errorCode === 'auth/invalid-email') {
+                this.mostrarErrorSign = true,
+                this.errorSalidaSign = 'Invalid email';
+                this.showSpiner = false;
+                this.loginActivo = false;
+                this.signUpActivo = true;
+                this.resetPass = false;
+              }
+              if (errorCode === 'auth/weak-password') {
+                this.mostrarErrorSign = true,
+                this.errorSalidaSign = 'Minimum 6 characters for the password';
+                this.showSpiner = false;
+                this.loginActivo = false;
+                this.signUpActivo = true;
+                this.resetPass = false;
+              }
 
+              if (errorCode === 'auth/email-already-in-use') {
+                this.mostrarErrorSign = true,
+                this.errorSalidaSign = 'This email is already registered';
+                this.showSpiner = false;
+                this.loginActivo = false;
+                this.signUpActivo = true;
+                this.resetPass = false;
+              }
+              this.showSpiner = false;
+              this.loginActivo = false;
+              this.signUpActivo = true;
+              this.resetPass = false;
+              console.log(errorCode);
+              console.log(errorMessage);
             });
-            this.setUserData({
-              nombre: this.nameValue,
-              correo: this.emaiValue,
-              contraseña: this.passwValue,
-            });
-            this.setLoginNeeded(false);
-            this.f7router.navigate('/frPrincipal/');
-            console.log('se registro correctamente');
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+        } else {
+          this.mostrarErrorSign = true,
+          this.errorSalidaSign = 'Complete all the fields to continue';
+        }
+      }
 
-            console.log(errorCode);
-            console.log(errorMessage);
-          });
+      if (this.btnText === 'Reset Password') {
+        this.SendEmail();
       }
     },
   },

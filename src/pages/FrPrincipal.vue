@@ -230,6 +230,7 @@ import {
   doc, setDoc, getFirestore, getDoc,
 } from 'firebase/firestore';
 import { mapActions, mapState } from 'vuex';
+import { getAuth, signOut } from 'firebase/auth';
 import UCSearchEmpty from '@/components/UCSearchEmpty.vue';
 import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
@@ -424,7 +425,13 @@ export default {
     SignOut() {
       this.panelIzquierdo = false;
       this.setLoginNeeded(true);
-      this.f7router.navigate('/');
+      this.setActualOrder([]);
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.f7router.navigate('/');
+      }).catch((error) => {
+
+      });
     },
   },
 

@@ -141,7 +141,7 @@ export default {
     },
     CompleteOrder() {
       this.f7router.navigate('/frDelivery/');
-      this.popupOpened = true;
+      /* this.popupOpened = true; */
     },
     Increment(plato) {
       if (plato.cantidad < 20) {
