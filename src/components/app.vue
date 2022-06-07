@@ -23,7 +23,7 @@ export default {
       name: 'SpiceHut', // App name
       theme: 'auto', // Automatic theme detection
 
-      id: 'io.framework7.myapp', // App bundle ID
+      id: 'org.iesmurgi.spicehut', // App bundle ID
       // App store
       store,
       // App routes

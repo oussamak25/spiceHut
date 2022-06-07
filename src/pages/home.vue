@@ -71,7 +71,7 @@ export default {
     ...mapState(['loginNeeded', 'userData']),
   },
   created() {
-
+    window.screen.orientation.lock('portrait');
   },
   methods: {
     ...mapActions(['setAppData']),

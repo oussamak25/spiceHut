@@ -16,7 +16,7 @@
     "fillBars": false
   },
   "customBuild": false,
-  "pkg": "io.framework7.myapp",
+  "pkg": "org.iesmurgi.spicehut",
   "cordova": {
     "folder": "cordova",
     "platforms": [

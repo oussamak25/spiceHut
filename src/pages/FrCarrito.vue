@@ -63,29 +63,30 @@
           <f7-row>
             <f7-col width="80">
               <div class="head-text">
-                To confirm order
+                Pick up day and time
               </div>
             </f7-col>
           </f7-row>
         </div>
-        <div class="direccion">
-          <div class="titulo">
-            Address
-          </div>
-          <div class="valor">
-            Valor de la direccion cuando la tengamos
-          </div>
+        <div class="input-dia-hora">
+          <f7-list no-hairlines-md>
+            <f7-list-input
+              label="Date"
+              type="date"
+              placeholder="Please choose..."
+              @change="DateChange($event.target.value)"
+            />
+            <f7-list-input
+              label="Time"
+              type="time"
+              placeholder="Please choose..."
+              @change="TimeChange($event.target.value)"
+            />
+          </f7-list>
         </div>
-
-        <div class="total-pedido">
-          <div class="titulo">
-            Total to pay
-          </div>
-          <div class="precio">
-            {{ total }}€
-          </div>
+        <div class="error">
+          {{ errorValue }}
         </div>
-
         <div class="footer-popup">
           <div>
             <f7-button
@@ -127,7 +128,9 @@ export default {
   data() {
     return {
       popupOpened: false,
-
+      fechaValue: '',
+      horaValue: '',
+      errorValue: 'Tue-Sun  12:00-23:30',
     };
   },
   computed: {
@@ -135,13 +138,30 @@ export default {
 
   },
   methods: {
-    ...mapActions(['delActualOrder', 'addCantidadOrder']),
+    ...mapActions(['delActualOrder', 'addCantidadOrder', 'setFecha', 'setHora']),
     ComeBack() {
       this.f7router.navigate('/frPrincipal/');
     },
+    ConfirmarPopup() {
+      if (this.horaValue === '' || this.fechaValue === '') {
+        this.errorValue = 'Select a date and time';
+      } else {
+        this.popupOpened = false;
+        this.setFecha(this.fechaValue);
+        this.setHora(this.horaValue);
+        this.f7router.navigate('/frDelivery/');
+      }
+    },
     CompleteOrder() {
-      this.f7router.navigate('/frDelivery/');
-      /* this.popupOpened = true; */
+      this.popupOpened = true;
+    },
+    DateChange(val) {
+      this.fechaValue = val;
+      console.log(this.fechaValue);
+    },
+    TimeChange(val) {
+      this.horaValue = val;
+      console.log(this.horaValue);
     },
     Increment(plato) {
       if (plato.cantidad < 20) {
@@ -211,44 +231,32 @@ export default {
   margin-top:-18vh;
   margin-left:-20vh;
   border-radius: 5vh;
-
-  .direccion{
-    margin-top: 2vh;
-    margin-left: 4vh;
-    height: 13vh;
-    .titulo{
-      color: #b0b0b7;
-      font-size: 2.5vh;
-    }
-    .valor{
-      font-size: 2.2vh;
-
-    }
+  .input-dia-hora{
+    margin-top: -3vh;
+  }
+  .error{
+    margin-left: -2vh;
+    text-align: center;
+    margin-top: -2vh;
   }
 
-  .total-pedido{
-    display: flex;
-    flex-direction: row;
-    height: 6vh;
-    margin-top: 1vh;
-    margin-left: 4vh;
-    .titulo{
-      color: #b0b0b7;
-      font-size: 2.5vh;
-    }
-    .precio{
-      font-size: 2.5vh;
-      margin-left: 12vh;
-      font-weight: 500;
-      color: #FF4B3A;
-    }
+}
+.head-popup{
+  height: 7vh;
+  background: #F6F6F9;
+
+  .head-text{
+    margin-top: 3vh;
+    margin-left: 5vh;
+    font-family:Mela Pro;
+    font-size: 2.5vh;
+    font-weight: 600;
   }
 }
 .footer-popup{
   display: flex;
   flex-direction: row;
   margin-top: 2vh;
-
   .btn-cancel{
     width: 14vh;
     height: 7vh;

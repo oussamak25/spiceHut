@@ -194,12 +194,18 @@
             </f7-col>
           </f7-row>
         </div>
-        <div class="direccion">
+        <div
+          v-if="doorDelivery"
+          class="direccion"
+        >
           <div class="titulo">
             Address
           </div>
-          <div class="valor">
-            Valor de la direccion cuando la tengamos
+          <div
+
+            class="valor"
+          >
+            {{ adress }}
           </div>
         </div>
 
@@ -267,7 +273,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders', 'actualOrder']),
+    ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders', 'actualOrder', 'fecha', 'hora']),
 
   },
   created() {
@@ -339,12 +345,23 @@ export default {
       }
       this.total = totalPedido;
       const obj = {
-        ...this.actualOrder, id: this.userOrders, fecha: this.printDate(), total: totalPedido,
+        ...this.actualOrder,
+        id: this.userOrders,
+        fecha: this.printDate(),
+        total: totalPedido,
+        fechaSolicitada: this.fecha,
+        horaSolicitada: this.hora,
+        direccion: this.adress,
+        usuario: this.userData.correo,
       };
       const docs = doc(getFirestore(), 'users', this.userData.correo);
+      const pedidosNegocio = doc(getFirestore(), 'pedidosnegocio', 'totalpedidos');
 
       await updateDoc(docs, {
         orders: arrayUnion(obj),
+      });
+      await updateDoc(pedidosNegocio, {
+        pedidos: arrayUnion(obj),
       });
 
       this.setActualOrder([]);
@@ -380,7 +397,6 @@ export default {
           nombre: this.userData.nombre,
           correo: this.userData.correo,
           contraseña: this.userData.contraseña,
-
           apellido: apellido2,
           tel: tel2,
           genero: genero2,

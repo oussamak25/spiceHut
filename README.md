@@ -23,7 +23,7 @@ Framework7 app created with following options:
     "fillBars": false
   },
   "customBuild": false,
-  "pkg": "io.framework7.myapp",
+  "pkg": "org.iesmurgi.spicehut",
   "cordova": {
     "folder": "cordova",
     "platforms": [

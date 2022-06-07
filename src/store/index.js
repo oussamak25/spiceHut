@@ -9,6 +9,8 @@ export default createStore({
     appData: [],
     actualOrder: [],
     orders: [],
+    fecha: '',
+    hora: '',
 
   },
   actions: {
@@ -36,6 +38,12 @@ export default createStore({
     setOrders(context, value) {
       context.commit('setOrders', value);
     },
+    setFecha(context, value) {
+      context.commit('setFecha', value);
+    },
+    setHora(context, value) {
+      context.commit('setHora', value);
+    },
 
   },
 
@@ -57,6 +65,12 @@ export default createStore({
     },
     setOrders(state, value) {
       state.orders = value;
+    },
+    setFecha(state, value) {
+      state.fecha = value;
+    },
+    setHora(state, value) {
+      state.hora = value;
     },
     addActualOrder(state, value) {
       let exist = false;
