@@ -71,7 +71,7 @@ export default {
     ...mapState(['loginNeeded', 'userData']),
   },
   created() {
-    window.screen.orientation.lock('portrait');
+    
   },
   methods: {
     ...mapActions(['setAppData']),
@@ -141,8 +141,10 @@ export default {
       if (result) {
         if (this.loginNeeded) {
           this.f7router.navigate('/login/');
+          window.screen.orientation.lock('portrait');
         } else {
           this.f7router.navigate('/FrPrincipal/');
+          window.screen.orientation.lock('portrait');
         }
       }
     },
