@@ -21,6 +21,7 @@
 </template>
 
 <script>
+/* barra de busqueda para buscar los platos que nosotros pongamos */
 export default {
   props: {
     placeholder: { type: String, default: 'Search' },

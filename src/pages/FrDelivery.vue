@@ -1,3 +1,4 @@
+<!-- formulario para la direccion y el envio  -->
 <template>
   <f7-page
     name="delivery"
@@ -257,13 +258,13 @@ export default {
   },
   data() {
     return {
-      mostrarMetodosPago: true,
-      pagoSelected: true,
-      cardSelected: null,
-      bankSelected: null,
-      doorDelivery: null,
-      pickUp: null,
-      popupOpened: false,
+      mostrarMetodosPago: true, // mostrar pago o de lo contrariomostrar direcchio y telefono
+      pagoSelected: true, // controla si se ha selecionado un metodo de pago
+      cardSelected: null, // tarjeta
+      bankSelected: null, // cuenta bancaria
+      doorDelivery: null, // envia a domicilio
+      pickUp: null, // recogida en el restaurante
+      popupOpened: false, //
       select: true,
       total: 0,
       adress: '',
@@ -277,8 +278,11 @@ export default {
 
   },
   created() {
+    /* en el metodo created obtenemos del store la direcchion del cliente si es que la tuviera */
     this.adress = this.userData.direccion;
+    /* el telefono si lo tiene configurado  */
     this.phone = this.userData.tel;
+    /* calculamos el total del pedido actual que tiene */
     let totalPedido = 0;
     for (let i = 0; i < this.actualOrder.length; i++) {
       const element = this.actualOrder[i];
@@ -288,6 +292,8 @@ export default {
   },
   methods: {
     ...mapActions(['setLoginNeeded', 'setUserData', 'setActualOrder', 'setUserOrders']),
+    /* boton de confirmacion pagina delivery si todos los campos y datos son correcto s
+    se procede a mostrar al usuario el total y a confirmar el pedido */
     ProceedDelivery() {
       if (this.doorDelivery === true && (this.adress === '' || this.adress === undefined || this.phone === 0 || this.phone === undefined)) {
         this.mostrarError = true;
@@ -296,6 +302,7 @@ export default {
         this.mostrarError = false;
       }
     },
+    /* control de selecciones en el formulario */
     PressCard() {
       this.pagoSelected = false;
       this.cardSelected = true;
@@ -312,6 +319,7 @@ export default {
       this.doorDelivery = true;
       this.pickUp = false;
     },
+    /* control de cambios en los inputs */
     AdressChange(val) {
       this.adress = val;
     },
@@ -337,6 +345,7 @@ export default {
       this.setOrder();
       this.UpdateUserData();
     },
+    /* metodo que carga el pedido una vez confirmado  */
     async setOrder() {
       let totalPedido = 0;
       for (let i = 0; i < this.actualOrder.length; i++) {
@@ -344,6 +353,7 @@ export default {
         totalPedido += element.precio * element.cantidad;
       }
       this.total = totalPedido;
+      /* en este objeto insertamos todos los datos necesarios para subir el pedido a firebase */
       const obj = {
         ...this.actualOrder,
         id: this.userOrders,
@@ -357,6 +367,8 @@ export default {
       const docs = doc(getFirestore(), 'users', this.userData.correo);
       const pedidosNegocio = doc(getFirestore(), 'pedidosnegocio', 'totalpedidos');
 
+      /* actualizarmos el array orders de cada usuario en firebase y le concatenamos el objeto que se ha
+      creado anteriormente de esta manera cada usuario tiene su propia estructura de pedidos */
       await updateDoc(docs, {
         orders: arrayUnion(obj),
       });
@@ -364,10 +376,12 @@ export default {
         pedidos: arrayUnion(obj),
       });
 
+      /* reseteamos el pedido del store */
       this.setActualOrder([]);
       const id = this.userOrders + 1;
       this.setUserOrders(id);
     },
+    /* con este metodo obtenemos los datos que tiene el usuario en firebase */
     async getUserData() {
       const docRef = doc(getFirestore(), 'users', this.userData.correo);
       const docSnap = await getDoc(docRef);
@@ -378,6 +392,8 @@ export default {
       }
       console.log('No such document!');
     },
+    /* metodo que utilizamos para actualizar el telfono o direccion si no existe
+    previantemente */
     async UpdateUserData() {
       const docs = doc(getFirestore(), 'users', this.userData.correo);
       let apellido2 = '';
@@ -406,6 +422,7 @@ export default {
 
       this.getUserData();
     },
+    /* metodo para obtener la fecha actual del pedido */
     printDate() {
       return new Date().toLocaleDateString();
     },

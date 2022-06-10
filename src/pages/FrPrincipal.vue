@@ -1,3 +1,4 @@
+<!-- FrPrincipal  -->
 <template>
   <f7-page
     name="FrPrincipal"
@@ -225,6 +226,7 @@
 </template>
 
 <script>
+/* importaciones necesarias */
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import {
   doc, setDoc, getFirestore, getDoc,
@@ -239,6 +241,7 @@ import UCPreload from '@/components/UCPreload.vue';
 import UCSpinner from '@/components/UCSpinner.vue';
 
 export default {
+  /* componentes que usa esta pagina */
   components: {
     UCSearchEmpty,
     UCPlato,
@@ -253,38 +256,42 @@ export default {
   },
 
   data() {
+    /* variables reactivas */
     return {
-      Starters: false,
-      Main: false,
-      Drinks: false,
-      Rice: false,
-      Nan: false,
-      Desserts: false,
-      url: null,
-      descripcionPlato: false,
-      principal: true,
-      platosFiltro: false,
+      Starters: false, // se ha seleccionado esta opcion
+      Main: false, // se ha seleccionado esta opcion
+      Drinks: false, // se ha seleccionado esta opcion
+      Rice: false, // se ha seleccionado esta opcion
+      Nan: false, // se ha seleccionado esta opcion
+      Desserts: false, // se ha seleccionado esta opcion
+      descripcionPlato: false, // se ha pulsado un plato y se ha abierto la descripcion de un plato
+      principal: true, // mostrar pagina principa
+      platosFiltro: false, // mostrar platos filtrados
       platoSelected: null, // plato seleccionado en el scroll
-      arrayMostrar: [],
-      arrayParaFiltrar: [],
-      arrayFiltrado: [],
-      mostrarLoader: true,
-      panelIzquierdo: false,
-      spinnerOpen: false,
+      arrayMostrar: [], // array con las opciones que hay que mostrar en cada caso
+      arrayParaFiltrar: [], // array con todos los plato sin categorias
+      arrayFiltrado: [], // array con los platos filtrados
+      panelIzquierdo: false, // control apertura side menu
+      spinnerOpen: false, // control spinner
 
     };
   },
   computed: {
+    /* strore state */
     ...mapState(['loginNeeded', 'userData', 'appData', 'userOrders', 'actualOrder']),
 
   },
   created() {
+    /* metodo created  */
     this.Filtro();
     this.PressItemMenu('Main');
   },
 
   methods: {
     ...mapActions(['setLoginNeeded', 'setUserData', 'setActualOrder', 'addActualOrder']),
+    /* metod Filtro que nos desmonta el array que tenemos en el store con todos los datos
+    de la app, y los inserta en un solo array sin categorias para poder aplicar el filtro de forma
+    mas facil al pulsar en la barra de busqueda */
     Filtro() {
       this.arrayMostrar = this.appData.Main;
 
@@ -297,9 +304,12 @@ export default {
 
       // filtro
     },
+    /* metodo que uso para indicarle al programa que este un tiempo parado pj mientras
+    se realiza alguna operacions */
     Sleep(tiempo) {
       return new Promise((resolve) => setTimeout(resolve, tiempo));
     },
+    /* metodos que controlas la apertura de distintas pestañas o paginas */
     OpenHorario() {
       this.f7router.navigate('/horario/');
       this.panelIzquierdo = false;
@@ -316,12 +326,16 @@ export default {
       this.f7router.navigate('/orders/');
       this.panelIzquierdo = false;
     },
+    /* metodo para añadir el palto seleccionado al carrito recordemso que el carrito lo controlamos
+    con la varibale del state de nuestro store  */
     AddToCarPress() {
       this.addActualOrder(this.platoSelected);
       this.descripcionPlato = false;
       this.principal = true;
       this.platosFiltro = false;
     },
+    /* Metodo que nos sirve para cargar los distintos platos
+     dependiendo de la seleccion quu hagamos en el menu */
     async PressItemMenu(val) {
       if (val === 'Starters') {
         this.spinnerOpen = true;
@@ -402,26 +416,34 @@ export default {
         this.spinnerOpen = false;
       }
     },
+    /* metodo que controla la apertura de la descripcion de un plato al pulsar sobre el  */
     OpenPlatoDescripcion(val) {
       this.platoSelected = val;
       this.descripcionPlato = true;
       this.principal = false;
       this.platosFiltro = false;
     },
+    /* control del evento back de los distintos componentes
+    paara volver a mostrar la pagina principal  */
     PressBack() {
       this.descripcionPlato = false;
       this.principal = true;
       this.platosFiltro = false;
     },
+    /* Metodo que se encarga de realizar el filtro al pulsar en la barra de busqueda */
     BuscarPlatosFiltro(val) {
       this.arrayFiltrado = this.arrayParaFiltrar.filter((e) => e.nombre.toLowerCase().includes(val.toLocaleLowerCase()));
       this.descripcionPlato = false;
       this.principal = false;
       this.platosFiltro = true;
     },
+    /* control de apertura del carrito el carrito solo se abre si tenemos mas de 1 elemento en el carrito
+     */
     OpenCard() {
       if (this.actualOrder.length !== 0) { this.f7router.navigate('/frCarrito/'); }
     },
+    /* metodo para desuscribirse de la app y salir de la misma y establece el login a false por
+    lo que a la proxima que se entre en la app  */
     SignOut() {
       this.panelIzquierdo = false;
       this.setLoginNeeded(true);

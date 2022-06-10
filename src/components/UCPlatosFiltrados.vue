@@ -58,6 +58,7 @@
 </template>
 
 <script>
+/* importaciones necesarias */
 import { stringify } from 'json5';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { mapActions } from 'vuex';
@@ -65,18 +66,19 @@ import UCPlato from '@/components/UCPlato.vue';
 import UCPlatoDescripcion from '@/components/UCPlatoDescripcion.vue';
 
 export default {
+  /* este componente usa el componente UCPlato y el plato descripcion */
   components: {
     UCPlato,
     UCPlatoDescripcion,
   },
+  /* propiedades que le debemos pasar al componente cuando lo instanciemos */
   props: {
     platos: { type: Array, default: null },
   },
+  /* variables reactivas, cuando cambia su valor cambia en todos los lugares en los que las 
+  llamemos */
   data() {
     return {
-      platosDer: [],
-      platosIz: [],
-      Drinks: false,
       descripcionPlato: false,
       platoSelected: null,
     };
@@ -85,11 +87,14 @@ export default {
 
   },
   methods: {
+    /* metodos del store para cambiar las propiedaddes de este */
     ...mapActions(['setLoginNeeded', 'setUserData', 'setActualOrder', 'addActualOrder']),
+    /* metodo para añdier el plato seleccionado al carrito */
     AddToCarPress() {
       this.addActualOrder(this.platoSelected);
       this.descripcionPlato = false;
     },
+    /* metodo para abrir la descripcion del plato que pulsemos */
     OpenPlatoDescripcion(val) {
       this.platoSelected = val;
       this.descripcionPlato = true;

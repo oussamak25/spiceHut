@@ -9,7 +9,7 @@ import Horario from '@/pages/Horario.vue';
 import Profile from '@/pages/profile.vue';
 import Orders from '@/pages/orders.vue';
 
-
+/* Rutas de las paginas que se van cargando dentro del app.vue */
 const routes = [
   {
     path: '/',

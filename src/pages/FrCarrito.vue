@@ -1,3 +1,4 @@
+<!-- carrito con los pedidos -->
 <template>
   <f7-page
     name="carrito"
@@ -114,10 +115,12 @@
 </template>
 
 <script>
+/* importaciones necesarias */
 import { mapState, mapActions } from 'vuex';
 import UCItemCarritoVue from '@/components/UCItemCarrito.vue';
 
 export default {
+  /* componentes que usamos  */
   components: {
     UCItemCarritoVue,
   },
@@ -127,9 +130,9 @@ export default {
   },
   data() {
     return {
-      popupOpened: false,
-      fechaValue: '',
-      horaValue: '',
+      popupOpened: false, // control del popup de confirmacion
+      fechaValue: '', // fecha seleccionada por el usuario
+      horaValue: '', // hora seleccionada por el usuario
       errorValue: 'Tue-Sun  12:00-23:30',
     };
   },
@@ -142,6 +145,8 @@ export default {
     ComeBack() {
       this.f7router.navigate('/frPrincipal/');
     },
+    /* Al pulsar en el btn de confirmar del popup se comprueba que tenemos una fecha y una hora
+    Si la tenemeos esta todo correcto y pasamos a la siguiente pagina */
     ConfirmarPopup() {
       if (this.horaValue === '' || this.fechaValue === '') {
         this.errorValue = 'Select a date and time';
@@ -152,9 +157,11 @@ export default {
         this.f7router.navigate('/frDelivery/');
       }
     },
+    /* cuando le damos al btn completar nos abre el popup de seleccion de hora y fecha */
     CompleteOrder() {
       this.popupOpened = true;
     },
+    /* control de cambios en la fecha y en la hora */
     DateChange(val) {
       this.fechaValue = val;
       console.log(this.fechaValue);
@@ -163,6 +170,9 @@ export default {
       this.horaValue = val;
       console.log(this.horaValue);
     },
+    /* controls de los botones incrementar y decrementar que cambian el valor de la cantidad
+    del plato sobre el que se le pulsa y al pasarle una referencia directa de uno de los
+    valores del state lo cambio de forma automatica */
     Increment(plato) {
       if (plato.cantidad < 20) {
         plato.cantidad += 1;

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+/* Spinner para la carga de plato etc */
 export default {
 
 };

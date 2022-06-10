@@ -1,3 +1,4 @@
+<!-- perfil del usuario  -->
 <template>
   <f7-page
     name="profile"
@@ -88,6 +89,7 @@
 </template>
 
 <script>
+/* importaciones necesarias */
 import { mapActions, mapState } from 'vuex';
 import {
   doc, setDoc, getFirestore, getDoc, updateDoc, arrayUnion, arrayRemove,
@@ -96,11 +98,11 @@ import {
 export default {
   data() {
     return {
-      name: '',
-      lastName: '',
-      phone: 0,
-      gender: '',
-      mostrarError: false,
+      name: '', // valor del nombre
+      lastName: '', // valor del apellido
+      phone: 0, // valor del teelfono
+      gender: '', // valor del genero
+      mostrarError: false, // control paramostrar o no el error
     };
   },
   computed: {
@@ -108,6 +110,7 @@ export default {
 
   },
   created() {
+    /* cuando se crea se obtiene los datos que tenemos en el store  */
     this.name = this.userData.nombre;
     this.lastName = this.userData.apellido;
     this.phone = this.userData.tel;
@@ -115,6 +118,7 @@ export default {
   },
   methods: {
     ...mapActions(['setLoginNeeded', 'setUserData']),
+    /* Metodo para obtenr los datos del usuario actual de firebase */
     async getUserData() {
       const docRef = doc(getFirestore(), 'users', this.userData.correo);
       const docSnap = await getDoc(docRef);
@@ -125,6 +129,8 @@ export default {
       }
       console.log('No such document!');
     },
+    /* metodo que usamos para actualizar los datos del usuario tanto en firebase como en el state
+    del store */
     async UpdateUserData() {
       const docs = doc(getFirestore(), 'users', this.userData.correo);
 
@@ -143,6 +149,9 @@ export default {
       this.getUserData();
       console.log(this.userData);
     },
+    /* metodo que salta una vez pulsamos en el boton de update info si hay algun campo vacio 
+    no actualiza los dato sy salta el error cuando todo es correcto se actualizan los datos
+    del usuario */
     UpdateInfo() {
       if (this.name === '' || this.lastName === '' || this.phone === '' || this.gender === '') {
         this.mostrarError = true;
@@ -151,6 +160,7 @@ export default {
         this.UpdateUserData();
       }
     },
+    /* metodos de control de cambios en cada uno de lo inputs */
     NameChange(val) {
       this.name = val;
     },

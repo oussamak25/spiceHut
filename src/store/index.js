@@ -1,18 +1,26 @@
 import { createStore } from 'vuex';
 import VuexPersistence from 'vuex-persist';
+/* este es el store que nos sirve para guardar los datos importante y nos permite la persistencia
+de datos gracias al plugin que tenemos intalado vuex-persist */
 
 export default createStore({
+  /* este es el state que no podemos modificar directamente sino que tenemos
+  que llamar a las actions que a su vez llaman a las mutaciones y son las encargadas
+  de cambiar el state, el state tambien es reactivo cuando una de sus varibles
+  cambia cabia en todos los lugares de la app donde se utilice  */
   state: {
-    loginNeeded: true,
-    userData: null,
-    userOrders: 0,
-    appData: [],
-    actualOrder: [],
-    orders: [],
-    fecha: '',
-    hora: '',
+
+    loginNeeded: true, // usamos esta variable para comprobar si el usuario necesita login o no
+    userData: null, // datos personales del usuario nombre correo etc
+    userOrders: 0, // id de cada pedido relacionado con su correo
+    appData: [], //
+    actualOrder: [], // varibale que guarda el pedido actual del usuario
+    orders: [], // variable que guarda todos los pedidos anteriores que ha realizado el usuario para mostrarselo
+    fecha: '', // fecha del pedido
+    hora: '', // hora del pedido
 
   },
+  /* acciones sobre el state  */
   actions: {
     setLoginNeeded(context, value) {
       context.commit('setLoginNeeded', value);

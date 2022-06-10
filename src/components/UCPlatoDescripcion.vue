@@ -23,7 +23,7 @@
         :src="img"
       >
     </div>
-
+    <!-- muesto las propiedades que se le pasan al compponente -->
     <div class="nombre ">
       {{ nombre }}
     </div>
@@ -42,6 +42,8 @@
     </div>
 
     <div>
+      <!-- al pulsar este boton el componente emite un evento llamado addToCar
+      para que nosotros lo escuchemos que realicemos las acciones necesarias -->
       <f7-button
         class="btn-add"
         raised

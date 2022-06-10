@@ -20,6 +20,8 @@
 
 
 export default {
+  /* a este componente debemos pasarle una imagen que sera el enlace a firebase 
+  un nombre y un precio */
   props: {
     img: { type: String, default: null },
     nombre: { type: String, default: '' },

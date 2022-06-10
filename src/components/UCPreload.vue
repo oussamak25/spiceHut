@@ -8,6 +8,7 @@
 </template>
 
 <script>
+/* preloader para el inicio de la app */
 export default {
 
 };

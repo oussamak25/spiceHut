@@ -1,4 +1,5 @@
 <template>
+<!-- codigo componente item carrito que contine todos los palto que tenemos en el pedido -->
   <div
     class="container-pedido"
     :class="{'disabled': desactivar}"
@@ -49,9 +50,12 @@
 </template>
 
 <script>
+/* importaciones necesarias */
 import { mapState, mapActions } from 'vuex';
 
 export default {
+  /* propiedades que hay que pasarle, en mi caso siempre le paso un objeto 
+  de tipo plato que sera el que se pinte en el codigo html  */
   props: {
     plato: Object,
     desactivar: { type: Boolean, default: false },
@@ -63,22 +67,24 @@ export default {
     ...mapState(['actualOrder']),
 
   },
+  /* metodos necesarios para este componentes */
   methods: {
     ...mapActions(['delActualOrder', 'addCantidadOrder']),
+    /* metodo que se ejecuta al pulsar en la x del pedido y elimina el plato de nuestro array 
+    con todos los platos seleccionado */
     DeleteItem(plato) {
       this.delActualOrder(plato);
       if (this.actualOrder.length === 0) {
         this.$emit('principal');
       }
     },
-    CompleteOrder() {
-      this.f7router.navigate('/frDelivery/');
-    },
+    /* metodo para incrementar la cantidad del plato que se pulse */
     Increment(plato) {
       if (plato.cantidad < 20) {
         plato.cantidad += 1;
       }
     },
+    /* metodo para decrementar la cantidad del plato que se pulse */
     Decrement(plato) {
       if (plato.cantidad > 1) {
         plato.cantidad -= 1;
@@ -89,6 +95,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* codigo css para la creacion del componente */
 .container-pedido{
     overflow-y: scroll;
     overflow-x: hidden;

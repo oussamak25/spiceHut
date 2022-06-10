@@ -140,7 +140,7 @@
 </template>
 
 <script>
-
+/* Importaciones necesarias */
 import {
   getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword, sendPasswordResetEmail,
 } from 'firebase/auth';
@@ -158,32 +158,37 @@ export default {
     f7route: Object,
     f7router: Object,
   },
+  /* variables reactivas */
   data() {
     return {
-      loginActivo: true,
-      signUpActivo: false,
-      resetPass: false,
+      loginActivo: true, // por defecto el login esta activo pero una vez que te logueas no vuelves a loguearte hasta que pulses el boton de salir
+      signUpActivo: false, // control de pantalla a mostrar
+      resetPass: false, // mostrar pantalla resetpassw
       btnText: 'Login', // texto del btono segun si es login o signup
-      emaiValue: '',
-      emailValueReset: '',
-      passwValue: '',
-      nameValue: '',
-      mostrarErrorLogin: false,
-      errorSalidaLogin: '',
-      mostrarErrorSign: false,
-      errorSalidaSign: '',
-      mostrarErrorReset: false,
-      errorSalidaReset: '',
-      showSpiner: false,
+      emaiValue: '', // valor del email
+      emailValueReset: '', // valor del email al recuperar la contraseña
+      passwValue: '', // valor de la contraseña
+      nameValue: '', // valor del nombre del usuario
+      mostrarErrorLogin: false, // control de la muestra del error del login
+      errorSalidaLogin: '', // mensajeLogin
+      mostrarErrorSign: false, // control de la muestra del error del sign up
+      errorSalidaSign: '', // mensajeSign
+      mostrarErrorReset: false, // control de la muestra del error del reset passw
+      errorSalidaReset: '', // mensajeReset
+      showSpiner: false, // control de la muestra del spinner
 
     };
   },
   computed: {
+    /* variables del state de nuestro store */
     ...mapState(['loginNeeded', 'userData']),
 
   },
   methods: {
+    /* acciones para cambiar el state de nuesto store */
     ...mapActions(['setLoginNeeded', 'setUserData']),
+    /* metodo que se ejecuta al pulsar el btn de login cambia las
+    varibles necesarias para mostrar solo la parte de login y se ocultan las demas partes */
     PressLogin() {
       this.btnText = 'Login';
       this.loginActivo = true;
@@ -192,6 +197,8 @@ export default {
       this.errorSalidaSign = '';
       this.errorSalidaReset = '';
     },
+    /* metodo que se ejecuta al pulsar el btn de SignUp cambia las
+    varibles necesarias para mostrar solo la parte de login y se ocultan las demas partes */
     PressSignUp() {
       this.btnText = 'SingUp';
       this.loginActivo = false;
@@ -200,6 +207,8 @@ export default {
       this.errorSalidaLogin = '';
       this.errorSalidaReset = '';
     },
+    /* metodo que se ejecuta al pulsar el btn de forgotPassw cambia las
+    varibles necesarias para mostrar solo la parte de login y se ocultan las demas partes */
     ForgotPassw() {
       this.loginActivo = false;
       this.signUpActivo = false;
@@ -208,14 +217,21 @@ export default {
       this.errorSalidaSign = '';
       this.btnText = 'Reset Password';
     },
+    /* metodo que se ejecuta cuando se nos olvida la contraseña y enviamos un email para recuperar */
     SendEmail() {
+      /* cuando se ejecuta mostramos el spinner mientras se ejecuta la operacion
+      establecemos las varibales necesarias para mostrar solo el spinner */
       const auth = getAuth();
       this.showSpiner = true;
       this.loginActivo = false;
       this.signUpActivo = false;
       this.resetPass = false;
+      /* usamos el metod sendPasswordResetEmail de firebase para enviar un correo de recuperacion
+      al correo que indica el usuario  */
       sendPasswordResetEmail(auth, this.emailValueReset)
         .then(() => {
+          /* si la accion se ejecuta con exito quitamos el spinner mostramos la pantalla normal
+           con el mensaje diciendo que se ha enviado correctamente  */
           this.showSpiner = false;
           this.loginActivo = false;
           this.signUpActivo = false;
@@ -226,6 +242,7 @@ export default {
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          /* si pulsamo el boton sin un email salta este error */
           if (errorCode === 'auth/missing-email') {
             this.showSpiner = false;
             this.loginActivo = false;
@@ -240,6 +257,8 @@ export default {
           this.resetPass = true;
         });
     },
+    /* metodos que controlan los cambios en los input de la pagina si cambia un input
+    cambiamoso una varibale local reactiva  */
     EmailChange(val) {
       this.emaiValue = val;
     },
@@ -252,6 +271,8 @@ export default {
     NameChange(val) {
       this.nameValue = val;
     },
+    /* metodo getUserData obtiene la informacion personal del usuario de la base de datos
+    firebase  y la guarda en el store */
     async getUserData() {
       const docRef = doc(getFirestore(), 'users', this.emaiValue);
       const docSnap = await getDoc(docRef);
@@ -262,14 +283,18 @@ export default {
       }
       console.log('No such document!');
     },
+    /* metodo VerificacionIdentidad   */
     async VerificacionIdentidad() {
+      /* si el boton principal tiene la palabra login se ejecuta la funcionalidad del login */
       if (this.btnText === 'Login') {
         this.showSpiner = true;
         this.loginActivo = false;
         this.signUpActivo = false;
         this.resetPass = false;
+        /* metodo login de firebase al que le pasamos un email y una contraseña  */
         signInWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
           .then((userCredential) => {
+            /* si el login es correcto metemos los datos del usuario en el store  */
             const { user } = userCredential;
             console.log('Acceso correcto');
             console.log(user);
@@ -280,11 +305,14 @@ export default {
             });
             this.getUserData();
             this.setLoginNeeded(false);
+            /* navegamos a la pagina principal */
             this.f7router.navigate('/frPrincipal/');
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            /* si el error code es alguno de los siguientes aparece el error Invalida
+             email or passw */
             if (errorCode === 'auth/invalid-email' || errorCode === 'auth/internal-error' || errorCode === 'auth/user-not-found') {
               this.mostrarErrorLogin = true;
               this.errorSalidaLogin = 'Invalid email or password';
@@ -293,6 +321,7 @@ export default {
               this.signUpActivo = false;
               this.resetPass = false;
             }
+            /* si es el siguiente  es que la contraseña es incorrecta */
             if (errorCode === 'auth/wrong-password') {
               this.mostrarErrorLogin = true;
               this.errorSalidaLogin = 'Invalid password';
@@ -301,6 +330,8 @@ export default {
               this.signUpActivo = false;
               this.resetPass = false;
             }
+            /* en cualquier caso de error se desactiva el spinner se activa el login y se desactivan
+            las opciones que no necesitamos */
             this.showSpiner = false;
             this.loginActivo = true;
             this.signUpActivo = false;
@@ -309,16 +340,20 @@ export default {
             console.log(errorMessage);
           });
       }
+      /* si el texto del btn es SignUp ejecutamos el siguiente codigo  */
       if (this.btnText === 'SingUp') {
+        /* el campo nombre es obligatorio por lo que si esta vacio saltara un error */
         if (this.nameValue !== '') {
           this.showSpiner = true;
           this.loginActivo = false;
           this.signUpActivo = false;
           this.resetPass = false;
+          /* llamamos al metodo correcto de firebase para crear un usuario  */
           createUserWithEmailAndPassword(getAuth(), this.emaiValue, this.passwValue)
             .then((userCredential) => {
               const { user } = userCredential;
               console.log(user);
+              /* si se crea correctamente creamos la siguiente estructura  */
               setDoc(doc(getFirestore(), 'users', this.emaiValue), {
                 userData: {
                   nombre: this.nameValue,
@@ -343,6 +378,8 @@ export default {
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
+              /* segun el codigo de error mostrarmos un mensaje u otro y en todo caso
+              controlamos el cambio de ventanas es decir lo que se muestra en cada momento */
               if (errorCode === 'auth/invalid-email') {
                 this.mostrarErrorSign = true,
                 this.errorSalidaSign = 'Invalid email';
@@ -380,7 +417,7 @@ export default {
           this.errorSalidaSign = 'Complete all the fields to continue';
         }
       }
-
+      /* si el btn tiene el siguiente texto se llama al metodo send email */
       if (this.btnText === 'Reset Password') {
         this.SendEmail();
       }

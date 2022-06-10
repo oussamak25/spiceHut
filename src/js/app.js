@@ -25,6 +25,7 @@ import App from '../components/app.vue';
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
 
+//configuracion de conexion con firebase
 const firebaseConfig = {
   apiKey: 'AIzaSyB6UtV6bVo4gEin2q1lNrJIhbOqvkHcKpY',
   authDomain: 'spicehut-e868d.firebaseapp.com',

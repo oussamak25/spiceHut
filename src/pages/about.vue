@@ -1,5 +1,9 @@
+<!-- about page -->
 <template>
-  <f7-page name="about" class="container-page">
+  <f7-page
+    name="about"
+    class="container-page"
+  >
     <f7-navbar
       title="About"
       back-link="Back"

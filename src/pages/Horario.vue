@@ -1,3 +1,4 @@
+<!-- horario del local -->
 <template>
   <f7-page
     name="horario"
