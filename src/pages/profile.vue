@@ -1,6 +1,7 @@
 <!-- perfil del usuario  -->
 <template>
   <f7-page
+    id="view-profile"
     name="profile"
     class="container-page"
   >
@@ -133,6 +134,10 @@ export default {
     del store */
     async UpdateUserData() {
       const docs = doc(getFirestore(), 'users', this.userData.correo);
+      const dir = '';
+      if (!this.userData.direccion === undefined) {
+        dir = this.userData.direccion;
+      }
 
       await updateDoc(docs, {
         userData: {
@@ -142,14 +147,14 @@ export default {
           apellido: this.lastName,
           tel: this.phone,
           genero: this.gender,
-          direccion: this.userData.direccion,
+          direccion: dir,
         },
       });
 
       this.getUserData();
       console.log(this.userData);
     },
-    /* metodo que salta una vez pulsamos en el boton de update info si hay algun campo vacio 
+    /* metodo que salta una vez pulsamos en el boton de update info si hay algun campo vacio
     no actualiza los dato sy salta el error cuando todo es correcto se actualizan los datos
     del usuario */
     UpdateInfo() {

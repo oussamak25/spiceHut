@@ -4,11 +4,13 @@
     @click="$emit('focus', presed)"
   >
     <input
+      id="input-busqueda"
       type="text"
       :placeholder="placeholder"
       @input="valorCampo = $event.target.value"
     >
     <div
+      id="btn-buscar"
       class="container__img"
       @click="$emit('buscar', valorCampo )"
     >

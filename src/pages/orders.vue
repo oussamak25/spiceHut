@@ -1,5 +1,6 @@
 <template>
   <f7-page
+    id="view-orders"
     name="orders"
     class="container-page"
   >

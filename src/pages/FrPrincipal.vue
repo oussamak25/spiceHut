@@ -15,6 +15,7 @@
         <f7-row>
           <f7-col class="display-flex flex-direction-row">
             <f7-link
+              id="btn-panel-izquierdo"
               @click="panelIzquierdo = true"
             >
               <f7-icon
@@ -26,7 +27,7 @@
           </f7-col>
           <f7-col class="display-flex flex-direction-row-reverse">
             <f7-link
-
+              id="btn-carrito"
               @click="OpenCard"
             >
               <div class="carrito">
@@ -77,6 +78,7 @@
           </div>
         </div>
         <div
+          id="item-menu-drinks"
           class="item-menu"
           @click="PressItemMenu('Drinks')"
         >
@@ -154,9 +156,13 @@
       @panel:closed="panelIzquierdo = false"
     >
       <f7-view>
-        <f7-page class="container-panel">
+        <f7-page
+          id="view-panel-izquierdo"
+          class="container-panel"
+        >
           <div class="container-panel__options">
             <div
+              id="btn-profile"
               class="container-panel__item"
               @click="OpenProfile"
             >
@@ -169,6 +175,7 @@
               Profile
             </div>
             <div
+              id="btn-orders"
               class="container-panel__border"
               @click="OpenOrders"
             >
@@ -181,6 +188,7 @@
               Orders
             </div>
             <div
+              id="btn-about"
               class="container-panel__border"
               @click="OpenAbout"
             >
@@ -193,6 +201,7 @@
               About us
             </div>
             <div
+              id="btn-horario"
               class="container-panel__border"
               @click="OpenHorario"
             >
@@ -207,6 +216,7 @@
           </div>
 
           <div
+            id="btn-sign-out"
             class="container-panel__sign-out"
             @click="SignOut"
           >

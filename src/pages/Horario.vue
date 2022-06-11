@@ -1,6 +1,7 @@
 <!-- horario del local -->
 <template>
   <f7-page
+    id="view-horario"
     name="horario"
     class="container"
   >

@@ -1,6 +1,7 @@
 <!-- about page -->
 <template>
   <f7-page
+    id="view-about"
     name="about"
     class="container-page"
   >

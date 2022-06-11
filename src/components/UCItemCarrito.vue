@@ -1,5 +1,5 @@
 <template>
-<!-- codigo componente item carrito que contine todos los palto que tenemos en el pedido -->
+  <!-- codigo componente item carrito que contine todos los palto que tenemos en el pedido -->
   <div
     class="container-pedido"
     :class="{'disabled': desactivar}"
@@ -29,15 +29,20 @@
         </div>
         <div class="container-increment">
           <div
+            data-testId="btnDecrement"
             class="restar"
             @click="Decrement(plato)"
           >
             -
           </div>
-          <div class="valor">
+          <div
+            class="valor"
+            data-testId="txtCantidad"
+          >
             {{ plato.cantidad }}
           </div>
           <div
+            data-testId="btnIncrement"
             class="sumar"
             @click="Increment(plato)"
           >
@@ -54,7 +59,7 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  /* propiedades que hay que pasarle, en mi caso siempre le paso un objeto 
+  /* propiedades que hay que pasarle, en mi caso siempre le paso un objeto
   de tipo plato que sera el que se pinte en el codigo html  */
   props: {
     plato: Object,
@@ -70,7 +75,7 @@ export default {
   /* metodos necesarios para este componentes */
   methods: {
     ...mapActions(['delActualOrder', 'addCantidadOrder']),
-    /* metodo que se ejecuta al pulsar en la x del pedido y elimina el plato de nuestro array 
+    /* metodo que se ejecuta al pulsar en la x del pedido y elimina el plato de nuestro array
     con todos los platos seleccionado */
     DeleteItem(plato) {
       this.delActualOrder(plato);

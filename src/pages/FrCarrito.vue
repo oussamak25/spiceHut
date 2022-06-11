@@ -5,7 +5,10 @@
     class="container-page"
   >
     <!-- nav  -->
-    <div class="margin padding">
+    <div
+      id="view-carrito"
+      class="margin padding"
+    >
       <f7-row>
         <f7-col
           width="20"

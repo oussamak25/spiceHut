@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="!descripcionPlato"
+    id="view-filtro"
     class="sin-scroll"
   >
     <!-- nav bar panel derecho y carrito compra -->
@@ -75,7 +76,7 @@ export default {
   props: {
     platos: { type: Array, default: null },
   },
-  /* variables reactivas, cuando cambia su valor cambia en todos los lugares en los que las 
+  /* variables reactivas, cuando cambia su valor cambia en todos los lugares en los que las
   llamemos */
   data() {
     return {
