@@ -6,6 +6,7 @@
   >
     <div
       v-if="principal"
+      id="page-principal"
       class="sin-scroll"
     >
       <!-- nav bar panel derecho y carrito compra -->

@@ -26,6 +26,7 @@
       </div>
       <div class="btn">
         <f7-button
+          id="btn-get-starteed"
           class="btnInicio"
           raised
           round

@@ -12,12 +12,14 @@
       </div>
       <div class="display-flex flex-direction-row justify-content-center">
         <f7-button
+          id="btn-login"
           :class="{ 'btn-active': loginActivo, 'btn-off': signUpActivo }"
           @click="PressLogin"
         >
           Login
         </f7-button>
         <f7-button
+          id="btn-sign"
           :class="{ 'btn-active': signUpActivo, 'btn-off': loginActivo }"
           @click="PressSignUp"
         >
@@ -27,11 +29,13 @@
     </div>
     <div
       v-if="loginActivo"
+      id="login-view"
       class="container-i"
     >
       <div class="container-i__input">
         Email address
         <input
+          id="input-email-login"
           class="email"
           type="email"
           placeholder="Your e-mail"
@@ -42,6 +46,7 @@
       <div class="container-i__input">
         Password
         <input
+          id="input-passw-login"
           class="passw"
           type="password"
           placeholder="Your password"
@@ -49,6 +54,7 @@
         >
       </div>
       <div
+        id="forgot-passw"
         class="input__forgot"
         @click="ForgotPassw"
       >
@@ -56,6 +62,7 @@
       </div>
       <div
         v-if="mostrarErrorLogin"
+        id="error-login"
         class="input__forgot"
       >
         {{ errorSalidaLogin }}
@@ -64,11 +71,13 @@
 
     <div
       v-if="resetPass"
+      id="reset-pass-view"
       class="container-i"
     >
       <div class="container-i__input">
         Email address
         <input
+          id="input-reset-pass"
           class="email"
           type="email"
           placeholder="Your e-mail"
@@ -78,6 +87,7 @@
 
       <div
         v-if="mostrarErrorReset"
+        id="error-reset"
         class="input__forgot"
       >
         {{ errorSalidaReset }}
@@ -86,11 +96,13 @@
 
     <div
       v-if="signUpActivo"
+      id="sign-view"
       class="container-i"
     >
       <div class="container-i__input">
         Nombre
         <input
+          id="input-name-Sign-up"
           class="email"
           type="email"
           placeholder="Your name"
@@ -100,6 +112,7 @@
       <div class="container-i__input">
         Email address
         <input
+          id="input-email-Sign-up"
           class="email"
           type="email"
           placeholder="Your e-mail"
@@ -110,6 +123,7 @@
       <div class="container-i__input">
         Password
         <input
+          id="input-passw-Sign-up"
           class="passw"
           type="password"
           placeholder="Your password"
@@ -118,6 +132,7 @@
       </div>
       <div
         v-if="mostrarErrorSign"
+        id="error-sign"
         class="input__forgot"
       >
         {{ errorSalidaSign }}
@@ -128,6 +143,7 @@
     </div>
     <div>
       <f7-button
+        id="btn-access"
         class="btn-comprobar"
         raised
         round
@@ -251,6 +267,8 @@ export default {
             this.mostrarErrorReset = true;
             this.errorSalidaReset = 'Invalid email error';
           }
+          this.mostrarErrorReset = true;
+          this.errorSalidaReset = 'Invalid email error';
           this.showSpiner = false;
           this.loginActivo = false;
           this.signUpActivo = false;
